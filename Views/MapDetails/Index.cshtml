@@ -1,0 +1,28 @@
+﻿@{
+}
+@model IEnumerable<M79Climbing.Models.Cap>
+
+@{
+    ViewData["Title"] = "Map Details";
+    var map = ViewData["Map"] as string;
+}
+
+<h1>Map Details for @map</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().Name)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Time)</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var time in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => time.Name)</td>
+            <td>@Html.DisplayFor(modelItem => time.Time)</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,31 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<M79Climbing.Models.Cap>
+
+@{
+    ViewData["Title"] = "Name Details";
+    var name = ViewData["Name"] as string;
+}
+
+<h1>Details for @name</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.First().Map)</th>
+            <th>@Html.DisplayNameFor(model => model.First().Time)</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var time in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => time.Map)</td>
+            <td>@Html.DisplayFor(modelItem => time.Time)</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using M79Climbing.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<M79ClimbingContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("M79ClimbingContext") ?? throw new InvalidOperationException("Connection string 'M79ClimbingContext' not found.")));
