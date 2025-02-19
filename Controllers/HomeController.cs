@@ -28,38 +28,6 @@ public class HomeController : Controller
         return View();
     }
 
-    [HttpPost("UploadFile")]
-    public async Task<IActionResult> UploadFile(IFormFile file)
-    {
-        if (file == null || file.Length == 0)
-        {
-            return BadRequest("File is empty or not provided.");
-        }
-
-        try
-        {
-            using (var stream = new StreamReader(file.OpenReadStream()))
-            {
-                var jsonString = await stream.ReadToEndAsync();
-                var cap = JsonSerializer.Deserialize<Cap>(jsonString);
-
-                if (cap != null)
-                {
-                    cap.CapDate = DateTime.Now;
-                    _context.Cap.Add(cap);
-                    await _context.SaveChangesAsync();
-                }
-            }
-
-            return Ok("File uploaded and data saved successfully.");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error uploading file.");
-            return StatusCode(500, ex);
-        }
-    }
-
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

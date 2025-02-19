@@ -151,7 +151,7 @@ namespace M79Climbing.Controllers
 
         private bool CapExists(int id)
         {
-            return _context.Cap.Any(e => e.Id == id);
+            return _context.Cap.Any(c => c.Id == id);
         }
     }
 }
