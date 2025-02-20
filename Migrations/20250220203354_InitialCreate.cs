@@ -15,13 +15,13 @@ namespace M79Climbing.Migrations
                 name: "Cap",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Ip = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Map = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Time = table.Column<int>(type: "int", nullable: false),
-                    CapDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Ip = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Map = table.Column<string>(type: "TEXT", nullable: false),
+                    Time = table.Column<int>(type: "INTEGER", nullable: false),
+                    CapDate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
