@@ -25,6 +25,7 @@ namespace M79Climbing.Controllers
                 .ToListAsync();
 
             ViewData["Name"] = name;
+            ViewData["CapsCount"] = times.Count;
             return View(times);
         }
     }

@@ -1,0 +1,40 @@
+﻿@model IEnumerable<M79Climbing.Models.Cap>
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Admin Dashboard</h2>
+
+<a class="btn btn-success" href="@Url.Action("Create")">Create new record</a>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Ip</th>
+            <th>Name</th>
+            <th>Map</th>
+            <th>Time</th>
+            <th>CapDate</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var cap in Model)
+        {
+            <tr>
+                <td>@cap.Id</td>
+                <td>@cap.Ip</td>
+                <td>@cap.Name</td>
+                <td>@cap.Map</td>
+                <td>@cap.Time</td>
+                <td>@cap.CapDate</td>
+                <td>
+                    <a class="btn btn-primary" href="@Url.Action("Edit", new { id = cap.Id })">Edit</a>
+                    <a class="btn btn-danger" href="@Url.Action("Delete", new { id = cap.Id })">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

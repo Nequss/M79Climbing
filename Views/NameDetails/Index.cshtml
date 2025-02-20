@@ -2,11 +2,14 @@
 @model IEnumerable<M79Climbing.Models.Cap>
 
 @{
-    ViewData["Title"] = "Name Details";
     var name = ViewData["Name"] as string;
+
+    ViewData["Title"] = name;
 }
 
-<h1>Details for @name</h1>
+<h1>@name</h1>
+
+<p>Total Caps: @ViewData["CapsCount"]</p>
 
 <table class="table">
     <thead>

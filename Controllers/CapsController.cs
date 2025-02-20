@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using M79Climbing.Data;
 using M79Climbing.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace M79Climbing.Controllers
 {
@@ -30,6 +31,13 @@ namespace M79Climbing.Controllers
             return View(bestTimes);
         }
 
+        [Authorize(Policy = "AdminOnly")]
+        public async Task<IActionResult> Dashboard()
+        {
+            var caps = await _context.Cap.ToListAsync();
+            return View(caps);
+        }
+
         // GET: Caps/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -49,6 +57,7 @@ namespace M79Climbing.Controllers
         }
 
         // GET: Caps/Create
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Create()
         {
             return View();
@@ -71,6 +80,7 @@ namespace M79Climbing.Controllers
         }
 
         // GET: Caps/Edit/5
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -91,6 +101,7 @@ namespace M79Climbing.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Ip,Name,Map,Time,CapDate")] Cap cap)
         {
             if (id != cap.Id)
@@ -122,6 +133,7 @@ namespace M79Climbing.Controllers
         }
 
         // GET: Caps/Delete/5
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -142,6 +154,7 @@ namespace M79Climbing.Controllers
         // POST: Caps/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var cap = await _context.Cap.FindAsync(id);

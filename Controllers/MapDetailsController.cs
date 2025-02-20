@@ -26,7 +26,13 @@ namespace M79Climbing.Controllers
                 .Select(g => g.OrderBy(c => c.Time).FirstOrDefault())
                 .ToListAsync();
 
+            var capsCount = await _context.Cap
+                .Where(c => c.Map == map)
+                .CountAsync();
+
             ViewData["Map"] = map;
+            ViewData["CapsCount"] = capsCount;
+
             return View(times);
         }
     }
