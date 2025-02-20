@@ -1,4 +1,5 @@
-﻿@model IEnumerable<M79Climbing.Models.Cap>
+﻿@using M79Climbing.Helpers
+@model IEnumerable<M79Climbing.Models.Cap>
 
 @{
     ViewData["Title"] = "Index";
@@ -34,21 +35,22 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                <a asp-controller="MapDetails" asp-action="Index" asp-route-map="@item.Map">@Html.DisplayFor(modelItem => item.Map)</a>
-            </td>
-            <td>
-                <a asp-controller="NameDetails" asp-action="Index" asp-route-name="@item.Name">@Html.DisplayFor(modelItem => item.Name)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Time)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CapDate)
-            </td>
-        </tr>
+        @foreach (var cap in Model) 
+        {
+            <tr>
+                <td>
+                    <a asp-controller="MapDetails" asp-action="Index" asp-route-map="@cap.Map">@Html.DisplayFor(modelItem => cap.Map)</a>
+                </td>
+                <td>
+                    <a asp-controller="NameDetails" asp-action="Index" asp-route-name="@cap.Name">@Html.DisplayFor(modelItem => cap.Name)</a>
+                </td>
+                <td>
+                    @TimeHelper.ReturnTime(cap.Time)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => cap.CapDate)
+                </td>
+            </tr>
         }
     </tbody>
 </table>

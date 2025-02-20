@@ -17,11 +17,13 @@ namespace M79Climbing.Controllers
         public MapDetailsController(M79ClimbingContext context)
         {
             _context = context;
+
         }
 
         public async Task<IActionResult> Index(string map)
         {
             var times = await _context.Cap
+                .Where(c => c.Map == map) // Filter by map first
                 .GroupBy(c => c.Name)
                 .Select(g => g.OrderBy(c => c.Time).FirstOrDefault())
                 .ToListAsync();

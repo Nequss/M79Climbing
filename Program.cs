@@ -10,6 +10,7 @@ builder.Services.AddDbContext<M79ClimbingContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Add authentication services
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -17,6 +18,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Admin/AccessDenied";
     });
 
+// Add authorization policy
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));

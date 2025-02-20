@@ -1,4 +1,4 @@
-﻿
+﻿@using M79Climbing.Helpers
 @model IEnumerable<M79Climbing.Models.Cap>
 
 @{
@@ -19,12 +19,16 @@
         </tr>
     </thead>
     <tbody>
-    @foreach (var time in Model)
-    {
-        <tr>
-            <td>@Html.DisplayFor(modelItem => time.Map)</td>
-            <td>@Html.DisplayFor(modelItem => time.Time)</td>
-        </tr>
-    }
+        @foreach (var cap in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => cap.Map)
+                </td>
+                <td>
+                    @TimeHelper.ReturnTime(cap.Time)
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
