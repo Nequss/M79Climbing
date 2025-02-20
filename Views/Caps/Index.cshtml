@@ -4,11 +4,17 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Map List</h1>
+<div class="leaderboardHeader">
+    🏆Leaderboard🏆
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div class="leaderboardDesc">
+    <p>
+        Click on a map name to view the best caps for that specific map and see how your perform against others.
+        <br>
+        Click on a player’s name to view only that player's caps on all maps, making it easy to track their progress and see how you compare.
+    </p>
+</div>
 
 <table class="table">
     <thead>
@@ -23,7 +29,7 @@
                 @Html.DisplayNameFor(model => model.Time)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CapDate)
+               Date
             </th>
         </tr>
     </thead>
@@ -42,12 +48,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CapDate)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
         </tr>
-}
+        }
     </tbody>
 </table>

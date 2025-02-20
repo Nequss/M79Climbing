@@ -22,7 +22,12 @@ namespace M79Climbing.Controllers
         // GET: Caps
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Cap.ToListAsync());
+            var bestTimes = await _context.Cap
+                .GroupBy(c => c.Map)
+                .Select(g => g.OrderBy(c => c.Time).FirstOrDefault())
+                .ToListAsync();
+
+            return View(bestTimes);
         }
 
         // GET: Caps/Details/5

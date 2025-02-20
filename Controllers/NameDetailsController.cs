@@ -20,7 +20,8 @@ namespace M79Climbing.Controllers
         {
             var times = await _context.Cap
                 .Where(c => c.Name == name)
-                .OrderBy(c => c.Time)
+                .OrderBy(c => c.Name) 
+                .ThenBy(c => c.Time)  
                 .ToListAsync();
 
             ViewData["Name"] = name;

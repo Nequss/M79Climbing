@@ -15,7 +15,6 @@ html {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-
 html {
     position: relative;
     min-height: 100%;
@@ -23,13 +22,13 @@ html {
 
 body {
     margin-bottom: 60px;
+    color: white;
 
-    /*
     background-image: url('/images/soldatbg.png');
-    background-size: cover; /* Adjusts the image to cover the entire background 
+    background-size: cover; 
     background-repeat: repeat;
     background-position: center;
-    */
+    
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -40,3 +39,109 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+.container{
+    color: white;
+}
+
+.navbar {
+    background-color: transparent;
+}
+
+.navbar-brand {
+    color: white;
+}
+    .navbar-brand:hover {
+        color: #BBCC66;
+    }
+    .navbar-brand:active {
+        color: #BBCC66;
+    }
+
+.nav-link {
+    color: white;
+}
+    .nav-link:hover {
+        color: #BBCC66;
+    }
+
+    .nav-link.active {
+        color: #BBCC66;
+    }
+
+.navbar-toggler-icon {
+    filter: invert(100%); 
+    border: none;
+}
+
+.navbar-toggler {
+    border: none;
+}
+    .navbar-toggler:focus {
+        border-color: transparent !important;
+        box-shadow: 0 0 5px transparent;
+    }
+
+    .navbar-toggler:active {
+        border-color: #BBCC66 !important;
+        box-shadow: 0 0 5px #BBCC66;
+    }
+
+/* Leaderboard css */
+.leaderboardHeader {
+    font-size: 3em;
+    text-align: center;
+}
+
+.leaderboardDesc {
+    font-size: 1em;
+    text-align: center;
+    margin: 0px;
+}
+
+/* Style for the entire table */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+    /* Table headers */
+    .table thead {
+        background-color: transparent;
+        text-align: left;
+    }
+
+    .table th {
+        background-color: transparent;
+        padding: 10px;
+        font-weight: bold;
+        color: white;
+        border-bottom: 1px solid #BBCC66;
+    }
+
+    /* Table rows */
+    .table tbody tr {
+        background-color: transparent;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Table data cells */
+    .table td {
+        background-color: transparent;
+        padding: 10px;
+        border-bottom: 1px solid #BBCC66;
+        color: white
+    }
+
+    /* Links inside the table */
+    .table a {
+        color: white;
+        text-decoration: none;
+    }
+
+        .table a:hover {
+            text-decoration: underline;
+            color: #BBCC66;
+        }
+

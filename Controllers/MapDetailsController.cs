@@ -22,8 +22,8 @@ namespace M79Climbing.Controllers
         public async Task<IActionResult> Index(string map)
         {
             var times = await _context.Cap
-                .Where(c => c.Map == map)
-                .OrderBy(c => c.Time)
+                .GroupBy(c => c.Name)
+                .Select(g => g.OrderBy(c => c.Time).FirstOrDefault())
                 .ToListAsync();
 
             ViewData["Map"] = map;
