@@ -75,7 +75,7 @@ namespace M79Climbing.Controllers
             var result = new StringBuilder();
             foreach (var record in records)
             {
-                result.AppendLine($"{record.Name} - {record.Time} sec - {record.CapDate:yyyy-MM-dd}");
+                result.AppendLine($"{record.Name} {record.Time} {record.CapDate:yyyy-MM-dd}");
             }
 
             return Content(result.ToString());
@@ -91,13 +91,13 @@ namespace M79Climbing.Controllers
                 .Take(x)
                 .ToListAsync();
 
-            if (!records.Any())
+            if (records.Count == 0)
                 return Content("No records found");
 
             var result = new StringBuilder();
             foreach (var record in records)
             {
-                result.AppendLine($"{record.Name} - {record.Time} sec - {record.CapDate:yyyy-MM-dd}");
+                result.AppendLine($"{record.Name} {record.Time} {record.CapDate:yyyy-MM-dd}");
             }
 
             return Content(result.ToString());
