@@ -364,3 +364,7 @@ FodyWeavers.xsd
 
 # Ignore launchSettings.json file
 Properties/launchSettings.json
+
+# Shared Memory file,  Write-Ahead Log file
+*.db-shm
+*.db-wal
