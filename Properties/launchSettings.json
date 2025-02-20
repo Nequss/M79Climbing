@@ -8,7 +8,7 @@
       "applicationUrl": "http://localhost:5218",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "ADMIN_USERNAME": "your_admin_username",
+        "ADMIN_USERNAME": "your_admin_usernamee",
         "ADMIN_PASSWORD": "your_admin_password"
       }
     },
