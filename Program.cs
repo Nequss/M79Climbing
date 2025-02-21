@@ -7,6 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<M79ClimbingContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("M79ClimbingContext") ?? throw new InvalidOperationException("Connection string 'M79ClimbingContext' not found.")));
 
+// Add HttpClient
+builder.Services.AddHttpClient();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
