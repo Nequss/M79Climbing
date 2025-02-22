@@ -4,50 +4,6 @@
     ViewData["Title"] = "Info";
 }
 
-<!-- To do list -->
-
-<!-- 0. General Info -->
-<!-- 
-    Make the background: transparent.
-    Make Font color: white
-    The <hr> elements should be white as well.
-
-    CSS file is located there:
-    Solution explorer > Views > Shared > _Layout.cshtml > _Layout.cshtml.css
-
-    At the bottom of the file there is section where you can add your custom styles.
-
-    IMPORTANT NOTE:
-        _Layout is shared throught all the Views pages.
-        Comment what you do in the CSS file and here.
--->
-
-<!-- 1. Split the first part -->
-<!--
-    <h1 class="title">@Model.Name</h1>
-    <p class="info">@Model.Info</p>
-
-    Those two informations about the server need to be on the left side like it is currently.
-    The image of the server needs to be on the right side.
-    The image will be a circle logo of the server, will be around the same high as the text.
--->
-
-<!-- 2. Split the second part -->
-<!--
-    Divide the long list of information into two columns.
-    If the amount of rows is not the same on the both sides contact _nequs on discord.
--->
-
-<!-- 3. Center the third part -->
-<!--
-    3.1 Make the Description Panel centered.
-    3.2 Make the buttons centered.
-    3.3 Stylize the buttons
-        Background color: #252E1C
-        Border color: #BBCC66
-        Hover color: #BBCC66      
--->
-
 <div class="container mt-5">
     <div class="card">
         <div class="card-body">
@@ -57,73 +13,77 @@
                     <p class="info">@Model.Info</p>
             </div>
                 <div class="image-container">
-                    <img src="https://www.example.com/soldat-image.jpg" alt="Soldat Image" class="image">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBB8876JQ-uWnwS9XPsN4G0sk7wrafIhScAw&s" alt="Soldat Image" class="image">
                 </div>
             </div>
 
             <hr class="divider">
-
+ 
             <!-- Rows -->
             <div class="grid-container">
-                <div class="info-item">
-                    <strong>Current Map:</strong> @Model.CurrentMap
-                </div>
-                <div class="info-item">
-                    <strong>Players:</strong> @Model.NumPlayers / @Model.MaxPlayers
-                </div>
-                <div class="info-item">
-                    <strong>Max Players:</strong> @Model.MaxPlayers
-                </div>
-                <div class="info-item">
-                    <strong>Version:</strong> @Model.Version
-                </div>
-                <div class="info-item">
-                    <strong>Country:</strong> @Model.Country
-                </div>
-                <div class="info-item">
-                    <strong>OS:</strong> @Model.OS
-                </div>
-                <div class="info-item">
-                    <strong>IP:</strong> @Model.IP
-                </div>
-                <div class="info-item">
-                    <strong>Port:</strong> @Model.Port
-                </div>
-                <div class="info-item">
-                    <strong>Num Bots:</strong> @Model.NumBots
-                </div>
-                <div class="info-item">
-                    <strong>Bonus Frequency:</strong> @Model.BonusFreq
-                </div>
-                <div class="info-item">
-                    <strong>Respawn Time:</strong> @Model.Respawn
-                </div>
-                <div class="info-item">
-                    <strong>Connection Type:</strong> @Model.ConnectionType
-                </div>
-                <div class="info-item">
-                    <strong>Dedicated:</strong> @(Model.Dedicated ? "Yes" : "No")
-                </div>
-                <div class="info-item">
-                    <strong>Realistic Mode:</strong> @(Model.Realistic ? "Yes" : "No")
-                </div>
-                <div class="info-item">
-                    <strong>Private:</strong> @(Model.Private ? "Yes" : "No")
-                </div>
-                <div class="info-item">
-                    <strong>Survival Mode:</strong> @(Model.Survival ? "Yes" : "No")
-                </div>
-                <div class="info-item">
-                    <strong>Advanced Mode:</strong> @(Model.Advanced ? "Yes" : "No")
-                </div>
-                <div class="info-item">
-                    <strong>Weapon Mod:</strong> @(Model.WM ? "Yes" : "No")
-                </div>
-                <div class="info-item">
-                    <strong>Anti-Cheat:</strong> @(Model.AC ? "Yes" : "No")
-                </div>
-                <div class="info-item">
-                    <strong>Game Style:</strong> @Model.GameStyle
+              <div class="grid-colum-one">
+                    <div class="info-item">
+                        <strong>Current Map:</strong> @Model.CurrentMap
+                    </div>
+                    <div class="info-item">
+                        <strong>Players:</strong> @Model.NumPlayers / @Model.MaxPlayers
+                    </div>
+                    <div class="info-item">
+                        <strong>Max Players:</strong> @Model.MaxPlayers
+                    </div>
+                    <div class="info-item">
+                        <strong>Version:</strong> @Model.Version
+                    </div>
+                    <div class="info-item">
+                        <strong>Country:</strong> @Model.Country
+                    </div>
+                    <div class="info-item">
+                        <strong>OS:</strong> @Model.OS
+                    </div>
+                    <div class="info-item">
+                        <strong>IP:</strong> @Model.IP
+                    </div>
+                    <div class="info-item">
+                        <strong>Port:</strong> @Model.Port
+                    </div>
+                    <div class="info-item">
+                        <strong>Num Bots:</strong> @Model.NumBots
+                    </div>
+                    <div class="info-item">
+                        <strong>Bonus Frequency:</strong> @Model.BonusFreq
+                    </div>
+              </div> 
+               <div class="grid-colum-two">
+                     <div class="info-item">
+                      <strong>Respawn Time:</strong> @Model.Respawn
+                    </div>
+                    <div class="info-item">
+                      <strong>Connection Type:</strong> @Model.ConnectionType
+                    </div>
+                    <div class="info-item">
+                        <strong>Dedicated:</strong> @(Model.Dedicated ? "Yes" : "No")
+                    </div>
+                    <div class="info-item">
+                        <strong>Realistic Mode:</strong> @(Model.Realistic ? "Yes" : "No")
+                    </div>
+                    <div class="info-item">
+                        <strong>Private:</strong> @(Model.Private ? "Yes" : "No")
+                    </div>
+                    <div class="info-item">
+                        <strong>Survival Mode:</strong> @(Model.Survival ? "Yes" : "No")
+                    </div>
+                    <div class="info-item">
+                        <strong>Advanced Mode:</strong> @(Model.Advanced ? "Yes" : "No")
+                    </div>
+                    <div class="info-item">
+                        <strong>Weapon Mod:</strong> @(Model.WM ? "Yes" : "No")
+                    </div>
+                    <div class="info-item">
+                        <strong>Anti-Cheat:</strong> @(Model.AC ? "Yes" : "No")
+                    </div>
+                    <div class="info-item">
+                        <strong>Game Style:</strong> @Model.GameStyle
+                    </div>
                 </div>
             </div>
 
