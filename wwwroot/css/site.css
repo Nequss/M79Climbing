@@ -175,8 +175,12 @@ body {
     border-color: #BBCC66;
     }
    
-    .button-container a:hover{color:#BBCC66 !important;}
+    .button-container a:hover{
+        color:#BBCC66 !important; 
+        border-color: #BBCC66;}
+
     .image-container {text-align: right;}
+    
    hr.divider {
     border: 0;
     border-top: 2px solid white; }
