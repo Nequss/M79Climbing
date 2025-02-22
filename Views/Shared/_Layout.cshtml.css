@@ -40,17 +40,22 @@ button.accept-policy {
 }
 
 .footer {
-  position: absolute;
+  position: relative;
   bottom: 0;
   width: 100%;
   white-space: nowrap;
   line-height: 60px;
+  text-align: center;
+  padding: 15px 0;
 }
 
-/* Server info stuff */
+/*Wrapper is added for footer adjustment purposes*/
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
-.image-container
-{
-width: 100px;
-height: 100px;
+.wrapper > .content {
+  flex: 1;
 }
