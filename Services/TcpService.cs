@@ -31,12 +31,20 @@ public class TcpService
                     using (var reader = new StreamReader(stream, Encoding.UTF8))
                     using (var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
                     {
-                        // Send authentication
-                        await writer.WriteLineAsync(Environment.GetEnvironmentVariable("SOLDAT_ADMIN_PASSWORD"));
+                        // Get password from environment variable
+                        var password = Environment.GetEnvironmentVariable("SOLDAT_ADMIN_PASSWORD");
+
+                        // Send authentication with explicit newline
+                        await writer.WriteAsync(password);
+                        await writer.FlushAsync();
                         OnMessageReceived?.Invoke("Sent authentication");
 
+                        // Wait a moment before sending status
+                        await Task.Delay(4000);
+
                         // Send initial status command
-                        await writer.WriteLineAsync("=== status");
+                        await writer.WriteAsync("=== status\n");
+                        await writer.FlushAsync();
                         OnMessageReceived?.Invoke("Sent status command");
 
                         // Read responses
@@ -51,7 +59,7 @@ public class TcpService
             catch (Exception ex)
             {
                 OnMessageReceived?.Invoke($"Error: {ex.Message}");
-                await Task.Delay(5000); // Wait 5 seconds before reconnecting
+                await Task.Delay(5000);
             }
         }
     }
