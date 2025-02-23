@@ -109,7 +109,9 @@
                     isConnecting = true;
 
                     // ServerInfo is now a channel query parameter
-                    socket = new WebSocket('wss://' + window.location.host + '/ServerInfo/WebSocketEndpoint');
+                    // Use the correct WebSocket URL format
+                    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                    socket = new WebSocket(`${wsProtocol}//${window.location.host}/ServerInfo/WebSocketEndpoint`);
 
                     socket.onopen = function () {
                         console.log("Connected to WebSocket");

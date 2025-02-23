@@ -34,6 +34,8 @@ namespace M79Climbing.Controllers
             await _webSocketService.BroadcastToChannel(CHANNEL, message);
         }
 
+        [Route("/ServerInfo/WebSocketEndpoint")]
+
         public async Task WebSocketEndpoint()
         {
             if (HttpContext.WebSockets.IsWebSocketRequest)
