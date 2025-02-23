@@ -40,7 +40,7 @@ body {
   text-align: start;
 }
 
-.container{
+.container {
     color: white;
 }
 
@@ -100,94 +100,119 @@ body {
 }
 
 /* Style for the entire table */
-    .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    }
+.table {
+width: 100%;
+border-collapse: collapse;
+margin: 20px 0;
+}
 
-    /* Table headers */
-    .table thead {
-        background-color: transparent;
-        text-align: left;
-    }
+/* Table headers */
+.table thead {
+    background-color: transparent;
+    text-align: left;
+}
 
-    .table th {
-        background-color: transparent;
-        padding: 10px;
-        font-weight: bold;
-        color: white;
-        border-bottom: 1px solid #BBCC66;
-    }
+.table th {
+    background-color: transparent;
+    padding: 10px;
+    font-weight: bold;
+    color: white;
+    border-bottom: 1px solid #BBCC66;
+}
 
-    /* Table rows */
-    .table tbody tr {
-        background-color: transparent;
-        transition: background-color 0.3s ease;
-    }
+/* Table rows */
+.table tbody tr {
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
 
-    /* Table data cells */
-    .table td {
-        background-color: transparent;
-        padding: 10px;
-        border-bottom: 1px solid #BBCC66;
-        color: white
-    }
+/* Table data cells */
+.table td {
+    background-color: transparent;
+    padding: 10px;
+    border-bottom: 1px solid #BBCC66;
+    color: white
+}
 
-    /* Links inside the table */
-    .table a {
-        color: white;
-        text-decoration: none;
-    }
+/* Links inside the table */
+.table a {
+    color: white;
+    text-decoration: none;
+}
 
     .table a:hover {
         text-decoration: underline;
         color: #BBCC66;
      }
 
-    /* Server info shenanigans */
-    
-    .card{
-        background-color: transparent;
-        border: none;
-        color: white;
-    }
+/* Server info shenanigans */
 
-    .grid-container {
-        flex-direction: column;
-        justify-content: center; 
-        align-items: center; 
-        display: grid;
-        grid-template-columns: auto auto auto;
-        gap : 40px;
-    }
+.card {
+    background-color: transparent;
+    border: none;
+    color: white;
+    margin-top: -70px;
+}
 
-    .grid-colum-two {
-        align-items: flex-end;
-        margin-left: 100px; 
-    }
+.grid-container {
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap : 40px;
+}
 
-   .button-container {text-align: center;}
-  
-   .button-container a{
-    color:white !important;
-    background-color:#252E1C;
+.grid-colum-two {
+    align-items: flex-end;
+    margin-left: 100px; 
+}
+
+.button-container {
+    text-align: center;
+
+}
+
+.button-container a {
+    color: white !important;
+    background-color: #252E1C;
     border-color: #BBCC66;
-    }
-   
-    .button-container a:hover{
-        color:#BBCC66 !important; 
-        border-color: #BBCC66;}
+}
 
-    .image-container {text-align: right;}
+    .button-container a:hover {
+        color: #BBCC66 !important; 
+        border-color: #BBCC66;
+    }
+
+.image-container {
+    text-align: right;
+}
+   
+hr.divider {
+     border: 0;
+     border-top: 2px solid #BBCC66;
+}   
+
+.description-panel {
+     text-align: center; 
+     margin-top: 20px; 
+}
+
+#messagesList::-webkit-scrollbar {
+    width: 6px;
+}
+
+#messagesList::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#messagesList::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 3px;
+}
+
+#messagesList {
+    scrollbar-width: thin;
+    scrollbar-color: #B7C764 transparent;
     
-   hr.divider {
-    border: 0;
-    border-top: 2px solid #BBCC66;
-    }   
-
-  .description-panel {
-    text-align: center; 
-    margin-top: 20px; 
-    }
-   
+}

@@ -13,12 +13,12 @@
                     <p class="info">@Model.Info</p>
             </div>
                 <div class="image-container">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBB8876JQ-uWnwS9XPsN4G0sk7wrafIhScAw&s" alt="Soldat Image" class="image">
+                    <img src="~/images/m79climb2.png" alt="Join Now!" class="image">
                 </div>
             </div>
 
             <hr class="divider">
- 
+
             <!-- Rows -->
             <div class="grid-container">
               <div class="grid-colum-one">
@@ -89,11 +89,103 @@
 
             <hr class="divider">
 
+            <div class="container mt-5">
+                <div class="card">
+                    <div class="card-body" style="margin-top: 20px;">
+                        <h2 style="text-align: center;">Logs</h2>
+                        <ul id="messagesList" style="max-height: 250px; overflow-y: scroll; list-style-type: none; padding: 0;">
+                            <!-- New elements from websocket spawning there -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                let socket;
+                let isConnecting = false;
+
+                function connectWebSocket() {
+                    if (isConnecting) return;
+                    isConnecting = true;
+
+                    // ServerInfo is now a channel query parameter
+                    socket = new WebSocket('wss://' + window.location.host + '/ServerInfo/WebSocketEndpoint');
+
+                    socket.onopen = function () {
+                        console.log("Connected to WebSocket");
+                        isConnecting = false;
+                    };
+
+                socket.onmessage = function (event) {
+                    var messagesList = document.getElementById('messagesList');
+                    var message = event.data;
+                    var li = document.createElement('li');
+                    li.style.display = 'flex';
+                    li.style.justifyContent = 'space-between';
+                    li.style.marginBottom = '5px';
+                    li.style.marginLeft = '15px';
+
+                    var messageSpan = document.createElement('span');
+                    messageSpan.textContent = message;
+                    messageSpan.style.textAlign = 'center'
+
+                    var timeSpan = document.createElement('span');
+                    var now = new Date();
+                    timeSpan.textContent = now.toLocaleTimeString();
+                    timeSpan.style.marginRight = '15px';
+                    timeSpan.style.color = '#white';
+                    timeSpan.style.textAlign = 'center'
+
+
+                    li.appendChild(messageSpan);
+                    li.appendChild(timeSpan);
+                    messagesList.appendChild(li);
+
+                    // Scroll to the latest message
+                    messagesList.scrollTop = messagesList.scrollHeight;
+                };
+
+                    socket.onerror = function (error) {
+                        console.log("WebSocket error: " + error);
+                        isConnecting = false;
+                    };
+
+                    socket.onclose = function (event) {
+                        console.log("Disconnected from WebSocket");
+                        isConnecting = false;
+
+                        // Attempt to reconnect after a delay
+                        setTimeout(connectWebSocket, 5000);
+                    };
+                }
+
+                // Initial connection
+                connectWebSocket();
+
+                // Handle page visibility changes
+                document.addEventListener('visibilitychange', function() {
+                    if (document.visibilityState === 'visible') {
+                        if (!socket || socket.readyState !== WebSocket.OPEN) {
+                            connectWebSocket();
+                        }
+                    }
+                });
+
+                // Clean up on page unload
+                window.addEventListener('beforeunload', function() {
+                    if (socket && socket.readyState === WebSocket.OPEN) {
+                        socket.close();
+                    }
+                });
+            </script>
+
+            <hr class="divider">
+
             <!-- Description Panel -->
             <div class="description-panel">
-                <h3 class="description-title">Description</h3>
+                <h3 class="description-title">Want to create your own server?</h3>
                 <p class="description-text">
-                    Write your custom description here.
+                    I'll make all content downloadable soon, also stay tuned for full detailed instructions!
                 </p>
             </div>
 

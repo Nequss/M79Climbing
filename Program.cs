@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using M79Climbing.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting.StaticWebAssets;
+using M79Climbing.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<M79ClimbingContext>(options =>
@@ -28,6 +29,12 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
 });
 
+// Add TcpService
+builder.Services.AddSingleton<TcpService>();
+
+// Add WebSocket 
+builder.Services.AddSingleton<WebSocketService>();
+
 var app = builder.Build();
 
 // Loading/enabling static web assets
@@ -42,16 +49,18 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseRouting();
 
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
+app.UseWebSockets();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();
