@@ -17,7 +17,7 @@ public class TcpService
 
     private async Task ConnectToServerAsync()
     {
-        while (true) // Reconnection loop
+        while (true)
         {
             try
             {
@@ -28,30 +28,32 @@ public class TcpService
                     OnMessageReceived?.Invoke("Connected!");
 
                     using (var stream = client.GetStream())
-                    using (var reader = new StreamReader(stream, Encoding.UTF8))
-                    using (var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
                     {
-                        // Get password from environment variable
-                        var password = Environment.GetEnvironmentVariable("SOLDAT_ADMIN_PASSWORD");
-
-                        // Send authentication with explicit newline
-                        await writer.WriteAsync(password);
-                        await writer.FlushAsync();
+                        // Send password exactly like the Python code does
+                        byte[] passwordBytes = Encoding.UTF8.GetBytes($"{Environment.GetEnvironmentVariable("SOLDAT_ADMIN_PASSWORD")}\n");
+                        await stream.WriteAsync(passwordBytes, 0, passwordBytes.Length);
                         OnMessageReceived?.Invoke("Sent authentication");
 
-                        // Wait a moment before sending status
-                        await Task.Delay(4000);
-
-                        // Send initial status command
-                        await writer.WriteAsync("=== status\n");
-                        await writer.FlushAsync();
+                        // Send status command
+                        byte[] statusBytes = Encoding.UTF8.GetBytes("=== status\n");
+                        await stream.WriteAsync(statusBytes, 0, statusBytes.Length);
                         OnMessageReceived?.Invoke("Sent status command");
 
                         // Read responses
-                        string message;
-                        while ((message = await reader.ReadLineAsync()) != null)
+                        byte[] buffer = new byte[1024];
+                        while (true)
                         {
-                            OnMessageReceived?.Invoke(message.TrimEnd());
+                            int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length);
+                            if (bytesRead == 0) break; // Connection closed
+
+                            string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                            foreach (var line in message.Split('\n'))
+                            {
+                                if (!string.IsNullOrEmpty(line))
+                                {
+                                    OnMessageReceived?.Invoke(line.TrimEnd());
+                                }
+                            }
                         }
                     }
                 }
