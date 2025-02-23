@@ -1,68 +1,57 @@
-﻿using System.Net;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
+using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace M79Climbing.Services
+public class TcpService
 {
-    public class TcpService
+    private readonly int _port = 23073;
+    private readonly string _dockerHostname = "soldat_server";
+
+    public delegate void MessageReceivedHandler(string message);
+    public event MessageReceivedHandler OnMessageReceived;
+
+    public TcpService()
     {
-        /* DEBUG
-        private readonly int _port = 5000;
-        private readonly IPAddress _ipAddress = IPAddress.Loopback;
-        */
+        Task.Run(ConnectToServerAsync);
+    }
 
-        private readonly int _port = 23073;
-        private readonly string _dockerHostname = "soldat_server"; //docker
-
-        public delegate void MessageReceivedHandler(string message);
-        public event MessageReceivedHandler OnMessageReceived;
-
-        public TcpService()
-        {
-            Task.Run(StartListening);
-        }
-
-        private async Task StartListening()
+    private async Task ConnectToServerAsync()
+    {
+        while (true) // Reconnection loop
         {
             try
             {
                 var ipAddress = (await Dns.GetHostAddressesAsync(_dockerHostname)).FirstOrDefault();
-
-                //DEBUG var listener = new TcpListener(_ipAddress, _port);
-
-                var listener = new TcpListener(ipAddress, _port);
-                listener.Start();
-
-                while (true)
+                using (var client = new TcpClient())
                 {
-                    var client = await listener.AcceptTcpClientAsync();
-                    _ = HandleClientAsync(client);
+                    await client.ConnectAsync(ipAddress, _port);
+                    OnMessageReceived?.Invoke("Connected!");
+
+                    using (var stream = client.GetStream())
+                    using (var reader = new StreamReader(stream, Encoding.UTF8))
+                    using (var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true })
+                    {
+                        // Send authentication
+                        await writer.WriteLineAsync(Environment.GetEnvironmentVariable("SOLDAT_ADMIN_PASSWORD"));
+                        OnMessageReceived?.Invoke("Sent authentication");
+
+                        // Send initial status command
+                        await writer.WriteLineAsync("=== status");
+                        OnMessageReceived?.Invoke("Sent status command");
+
+                        // Read responses
+                        string message;
+                        while ((message = await reader.ReadLineAsync()) != null)
+                        {
+                            OnMessageReceived?.Invoke(message.TrimEnd());
+                        }
+                    }
                 }
             }
             catch (Exception ex)
             {
-                OnMessageReceived?.Invoke(ex.ToString());
-            }
-        }
-
-        private async Task HandleClientAsync(TcpClient client)
-        {
-            try
-            {
-                using (var stream = client.GetStream())
-                using (var reader = new StreamReader(stream, Encoding.UTF8))
-                {
-                    string message;
-                    while ((message = await reader.ReadLineAsync()) != null)
-                    {
-                        OnMessageReceived?.Invoke(message.TrimEnd());
-                    }
-                }
-            }
-            finally
-            {
-                client.Dispose();
+                OnMessageReceived?.Invoke($"Error: {ex.Message}");
+                await Task.Delay(5000); // Wait 5 seconds before reconnecting
             }
         }
     }
