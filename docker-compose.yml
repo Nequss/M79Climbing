@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  webapp:
+    image: maciekks11/nequs-m79climbing:latest
+    ports:
+      - "5218:80"
+    volumes:
+      - source-code:/app/src:ro
+      - dataprotection-keys:/root/.aspnet/DataProtection-Keys
+      - ./app.db:/app/app.db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ADMIN_USERNAME=${WEBSITE_ADMIN_USERNAME}
+      - ADMIN_PASSWORD=${WEBSITE_ADMIN_PASSWORD}
+      - SOLDAT_ADMIN_PASSWORD=${SOLDAT_ADMIN_PASSWORD}
+    networks:
+      - soldatserver_default
+      - external-containers
+
+volumes:
+  mssql-data:
+  dataprotection-keys:
+  source-code:
+
+networks:
+  soldatserver_default:
+    external: true
+  external-containers:
+    external: true 
