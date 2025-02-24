@@ -2,15 +2,12 @@
 
 # Ubuntu docker file for M79Climbing
 
-# This stage is used when running from VS in fast mode (Default for Debug configuration)
+# Base runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:9.0-noble AS base
-USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
+EXPOSE 80
 
-
-# This stage is used to build the service project
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:9.0-noble AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
@@ -20,13 +17,24 @@ COPY . .
 WORKDIR "/src/."
 RUN dotnet build "./M79Climbing.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-# This stage is used to publish the service project to be copied to the final stage
+# Publish stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./M79Climbing.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-# This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
+# Final stage
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "M79Climbing.dll"]
+
+# Create a script to initialize the database with proper permissions
+RUN echo '#!/bin/bash\n\
+if [ ! -f /app/app.db ]; then\n\
+  touch /app/app.db\n\
+fi\n\
+chmod 666 /app/app.db\n\
+exec dotnet M79Climbing.dll\n\
+' > /app/entrypoint.sh && \
+chmod +x /app/entrypoint.sh
+
+ENTRYPOINT ["/app/entrypoint.sh"]
