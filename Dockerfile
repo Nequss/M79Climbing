@@ -27,11 +27,14 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Create SQLite database directory and setup database
-RUN mkdir -p /app/data
-COPY ["app.db", "/app/data/"] 2>/dev/null || true
-RUN ln -s /app/data/app.db /app/app.db && \
-    chown -R $APP_UID:$APP_UID /app/data /app/app.db
+# Set a non-root user
+ENV APP_UID=1000
+ENV APP_GID=1000
+
+# Create database placeholder and set permissions
+RUN touch /app/app.db && \
+    chmod 664 /app/app.db && \
+    chown $APP_UID:$APP_GID /app/app.db
 
 # Switch to non-root user after setting up permissions
 USER $APP_UID
