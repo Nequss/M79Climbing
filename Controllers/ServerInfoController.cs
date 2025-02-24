@@ -1,10 +1,12 @@
 ﻿using M79Climbing.Models;
 using M79Climbing.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using System.Net.WebSockets;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace M79Climbing.Controllers
 {
@@ -46,6 +48,30 @@ namespace M79Climbing.Controllers
             else
             {
                 HttpContext.Response.StatusCode = 400;
+            }
+        }
+
+        [Authorize(Policy = "AdminOnly")]
+        [HttpPost]
+        public async Task<IActionResult> SendMessage([FromBody] ChatLogMessage message)
+        {
+            try
+            {
+                if (message == null || string.IsNullOrEmpty(message.Message))
+                {
+                    return BadRequest("Message cannot be empty");
+                }
+
+                Console.WriteLine($"Attempting to broadcast: {message.Message}");
+                await _tcpService.SendCommandAsync(message.Message);
+                Console.WriteLine("Broadcast successful");
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error processing message: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                return StatusCode(500, $"Server error: {ex.Message}");
             }
         }
 

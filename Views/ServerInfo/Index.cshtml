@@ -4,6 +4,8 @@
     ViewData["Title"] = "Info";
 }
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
 <div class="container mt-5">
     <div class="card">
         <div class="card-body">
@@ -89,6 +91,7 @@
 
             <hr class="divider">
 
+            <!-- Logs -->
             <div class="container mt-5">
                 <div class="card">
                     <div class="card-body" style="margin-top: 20px;">
@@ -97,9 +100,74 @@
                             <!-- New elements from websocket spawning there -->
                         </ul>
                     </div>
+                     @if (User.IsInRole("Admin"))
+                     {
+                        <div class="input-group mt-3">
+                            <input type="text" id="messageInput" class="form-control" placeholder="Enter message..." autocomplete="off">
+                            <button class="btn btn-primary" id="sendButton" onclick="sendMessage()">
+                                <i class="bi bi-arrow-return-left"></i>
+                            </button>
+                        </div>
+                     }
                 </div>
             </div>
 
+
+            <!--
+                This script sends a message to the websocket and tcp server when the user clicks the send button.
+            -->
+            <script>
+                function sendMessage() {
+                    const messageInput = document.getElementById('messageInput');
+                    const message = messageInput.value.trim();
+
+                    if (!message) {
+                        console.log('Message is empty');
+                        return;
+                    }
+
+                    console.log('Sending message:', message);
+
+                    fetch('/ServerInfo/SendMessage', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ message: message })
+                    })
+                    .then(async response => {
+                        console.log('Response status:', response.status);
+
+                        if (response.ok) {
+                            console.log('Message sent successfully');
+                            messageInput.value = '';
+                        } else {
+                            const errorText = await response.text();
+                            console.error('Server error details:', errorText);
+                            throw new Error(`Server responded with ${response.status}: ${errorText}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error details:', error);
+                        // Optionally show error to user
+                        // alert('Failed to send message: ' + error.message);
+                    });
+                }
+
+                // Add Enter key handler with error checking
+                document.getElementById('messageInput')?.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        sendMessage();
+                    }
+                });
+            </script>
+
+            <!--
+                This script manages a WebSocket connection to receive real-time messages and display them in a list.
+                It includes functions to connect to the WebSocket, handle incoming messages, and manage connection errors and reconnections.
+                The script also handles page visibility changes to reconnect the WebSocket if needed and cleans up the connection on page unload.
+            -->
             <script>
                 let socket;
                 let isConnecting = false;

@@ -68,6 +68,7 @@ namespace M79Climbing.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "AdminOnly")]
         public async Task<IActionResult> Create([Bind("Id,Ip,Name,Map,Time,CapDate")] Cap cap)
         {
             if (ModelState.IsValid)

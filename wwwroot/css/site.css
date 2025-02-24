@@ -160,7 +160,7 @@ margin: 20px 0;
     align-items: center; 
     display: grid;
     grid-template-columns: auto auto auto;
-    gap : 40px;
+    gap: 40px;
 }
 
 .grid-colum-two {
@@ -198,8 +198,10 @@ hr.divider {
      margin-top: 20px; 
 }
 
+/* Server info Logs */
+
 #messagesList::-webkit-scrollbar {
-    width: 6px;
+    width: 3px;
 }
 
 #messagesList::-webkit-scrollbar-track {
@@ -216,3 +218,75 @@ hr.divider {
     scrollbar-color: #B7C764 transparent;
     
 }
+
+/* Admin only message input */
+
+#messageInput {
+    border: 1px solid #BBCC66;
+    background-color: transparent;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+    #messageInput::placeholder {
+        color: white;
+    }
+
+    #messageInput:focus {
+        box-shadow: none;
+    }
+
+#sendButton {
+    width: 100px;
+    background-color: #252E1C;
+    color: white;
+    border: 1px solid #BBCC66;
+    padding: 10px;
+    border-radius: 5px;
+}
+    #sendButton:focus {
+        box-shadow: none;
+    }
+
+    #sendButton:hover {
+        color: #BBCC66;
+        background-color: transparent;
+    }
+
+/*********** Change autocomplete styles in WebKit ************
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    border: 1px solid green !important;
+    -webkit-text-fill-color: green !important;
+    -webkit-box-shadow: 0 0 0px 1000px #000 inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    background-color: #000 !important;
+}
+
+
+********** Additional specific targeting ************
+
+#messageInput:-webkit-autofill {
+    background-color: #000 !important;
+    -webkit-box-shadow: 0 0 0px 1000px #000 inset !important;
+    -webkit-text-fill-color: green !important;
+}
+
+********** Force background color ************
+
+input.form-control {
+    background-color: transparent !important;
+    color: green !important;
+}
+
+*************************************************************/
