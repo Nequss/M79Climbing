@@ -143,8 +143,7 @@
                     li.appendChild(timeSpan);
                     messagesList.appendChild(li);
 
-                    // Scroll to the latest message
-                    //messagesList.scrollTop = messagesList.scrollHeight;
+                    messagesList.scrollTop = messagesList.scrollHeight;
                 };
 
                     socket.onerror = function (error) {
