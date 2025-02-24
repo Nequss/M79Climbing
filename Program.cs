@@ -37,26 +37,12 @@ builder.Services.AddSingleton<WebSocketService>();
 
 var app = builder.Build();
 
-// Ensure database is created at startup
+// Apply migrations at startup
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<M79ClimbingContext>();
-        // Use EnsureCreated instead of Migrate - this will create the database schema
-        // based on your entity models without requiring migrations
-        context.Database.EnsureCreated();
-
-        // Log success
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogInformation("Database schema created successfully.");
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while creating the database.");
-    }
+    var context = services.GetRequiredService<M79ClimbingContext>();
+    context.Database.Migrate();
 }
 
 // Loading/enabling static web assets

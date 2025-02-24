@@ -17,7 +17,7 @@ namespace M79Climbing.Controllers
         private readonly HttpClient _httpClient;
         private readonly TcpService _tcpService;
         private readonly WebSocketService _webSocketService;
-        private M79ClimbingContext _context;
+        private readonly M79ClimbingContext _context;
 
         private static bool _isSubscribed = false;
         private const string CHANNEL = "ServerInfo"; // Define channel name as constant
