@@ -98,7 +98,7 @@ namespace M79Climbing.Controllers
             var result = new StringBuilder();
             foreach (var record in records)
             {
-                result.AppendLine($"{record.Name} {TimeHelper.ReturnTime(record.Time)} {record.CapDate:yyyy-MM-dd}");
+                result.AppendLine($"{record.Name} {TimeHelper.ReturnTime(record.Time)} {record.CapDate:yyyy-MM-dd HH:mm:ss}");
             }
 
             return Content(result.ToString());
