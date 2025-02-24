@@ -27,16 +27,14 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Set a non-root user
-ENV APP_UID=1000
-ENV APP_GID=1000
+# Create a script to initialize the database with proper permissions
+RUN echo '#!/bin/bash\n\
+if [ ! -f /app/app.db ]; then\n\
+  touch /app/app.db\n\
+fi\n\
+chmod 666 /app/app.db\n\
+exec dotnet M79Climbing.dll\n\
+' > /app/entrypoint.sh && \
+chmod +x /app/entrypoint.sh
 
-# Create database placeholder and set permissions
-RUN touch /app/app.db && \
-    chmod 664 /app/app.db && \
-    chown $APP_UID:$APP_GID /app/app.db
-
-# Switch to non-root user after setting up permissions
-USER $APP_UID
-
-ENTRYPOINT ["dotnet", "M79Climbing.dll"]
+ENTRYPOINT ["/app/entrypoint.sh"]

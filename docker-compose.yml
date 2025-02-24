@@ -8,7 +8,7 @@ services:
     volumes:
       - source-code:/app/src:ro
       - dataprotection-keys:/root/.aspnet/DataProtection-Keys
-      - ./app.db:/app/app.db
+      - sqlite-data:/app
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
@@ -23,6 +23,7 @@ volumes:
   mssql-data:
   dataprotection-keys:
   source-code:
+  sqlite-data:
 
 networks:
   soldatserver_default:
