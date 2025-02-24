@@ -28,39 +28,6 @@ namespace M79Climbing.Controllers
             return View();
         }
 
-        // Upload a score to the database
-        [HttpPost("uploadscore")]
-        public async Task<IActionResult> UploadScore(IFormFile file)
-        {
-            if (file == null || file.Length == 0)
-            {
-                return BadRequest("File is empty or not provided.");
-            }
-
-            try
-            {
-                using (var stream = new StreamReader(file.OpenReadStream()))
-                {
-                    var jsonString = await stream.ReadToEndAsync();
-                    var cap = JsonSerializer.Deserialize<Cap>(jsonString);
-
-                    if (cap != null)
-                    {
-                        cap.CapDate = DateTime.Now;
-                        _context.Cap.Add(cap);
-                        await _context.SaveChangesAsync();
-                    }
-                }
-
-                return Ok("File uploaded and data saved successfully.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error uploading file.");
-                return StatusCode(500, ex);
-            }
-        }
-
         // Get all times for a given map searched by Name or IP if Name not found
         [HttpGet("times/{playerIp}/{playerName}/{mapName}")]
         public async Task<IActionResult> GetAllTimes(string playerIp, string playerName, string mapName)

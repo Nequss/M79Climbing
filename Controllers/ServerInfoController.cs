@@ -1,8 +1,10 @@
-﻿using M79Climbing.Models;
+﻿using M79Climbing.Data;
+using M79Climbing.Models;
 using M79Climbing.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Net.WebSockets;
 using System.Text;
@@ -15,14 +17,23 @@ namespace M79Climbing.Controllers
         private readonly HttpClient _httpClient;
         private readonly TcpService _tcpService;
         private readonly WebSocketService _webSocketService;
+        private M79ClimbingContext _context;
+
         private static bool _isSubscribed = false;
         private const string CHANNEL = "ServerInfo"; // Define channel name as constant
 
-        public ServerInfoController(HttpClient httpClient, TcpService tcpService, WebSocketService webSocketService)
+        public ServerInfoController
+        (
+            HttpClient httpClient, 
+            TcpService tcpService,
+            WebSocketService webSocketService,
+            M79ClimbingContext context
+        )
         {
             _httpClient = httpClient;
             _tcpService = tcpService;
             _webSocketService = webSocketService;
+            _context = context;
 
             if (!_isSubscribed)
             {
@@ -33,7 +44,34 @@ namespace M79Climbing.Controllers
 
         private async void HandleTCPMessagesServerInfo(string message)
         {
-            await _webSocketService.BroadcastToChannel(CHANNEL, message);
+            // Check if it's a highscore message
+            if (message.StartsWith("H$"))
+            {
+                try
+                {
+                    string[] parts = message.Split(',');
+                    if (parts.Length >= 5)
+                    {
+                        var cap = new Cap
+                        {
+                            Ip = parts[1],
+                            Name = parts[2],
+                            Map = parts[3],
+                            Time = int.Parse(parts[4]),
+                            CapDate = DateTime.Now
+                        };
+
+                        _context.Cap.Add(cap);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving highscore: {ex.Message}");
+                }
+            }
+            else
+                await _webSocketService.BroadcastToChannel(CHANNEL, message);
         }
 
         [Route("/ServerInfo/WebSocketEndpoint")]

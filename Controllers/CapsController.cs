@@ -13,7 +13,7 @@ namespace M79Climbing.Controllers
 {
     public class CapsController : Controller
     {
-        private readonly M79ClimbingContext _context;
+        private M79ClimbingContext _context;
 
         public CapsController(M79ClimbingContext context)
         {
