@@ -3,6 +3,7 @@ using System;
 using M79Climbing.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace M79Climbing.Migrations
 {
     [DbContext(typeof(M79ClimbingContext))]
-    partial class M79ClimbingContextModelSnapshot : ModelSnapshot
+    [Migration("20250225155238_AddPlayerStats")]
+    partial class AddPlayerStats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");
@@ -55,19 +58,11 @@ namespace M79Climbing.Migrations
                     b.Property<int>("GrenadesThrown")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Ip")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("M79ShotsFired")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("MapFinishes")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<int>("Respawns")
                         .HasColumnType("INTEGER");

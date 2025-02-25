@@ -3,13 +3,36 @@
 
 @{
     var name = ViewData["Name"] as string;
+    var playerStats = ViewData["PlayerStats"] as M79Climbing.Models.PlayerStats;
 
     ViewData["Title"] = name;
 }
 
 <h1>@name</h1>
 
-<p>Total Caps: @ViewData["CapsCount"]</p>
+@if (playerStats != null)
+{
+    <div class="player-stats-container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="player-stats-card">
+                    <h4>Statistics</h4>
+                    <p><strong>Total Caps:</strong> @ViewData["CapsCount"]</p>
+                    <p><strong>Map Finishes:</strong> @playerStats.MapFinishes</p>
+                    <p><strong>Respawns:</strong> @playerStats.Respawns</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="player-stats-card">
+                    <h4>Other</h4>
+                    <p><strong>Grenades Thrown:</strong> @playerStats.GrenadesThrown</p>
+                    <p><strong>M79 Shots Fired:</strong> @playerStats.M79ShotsFired</p>
+                    <p><strong>Time Spent on Server:</strong> @playerStats.TimeSpentOnServer.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 <table class="table">
     <thead>

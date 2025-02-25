@@ -3,6 +3,7 @@ using System;
 using M79Climbing.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace M79Climbing.Migrations
 {
     [DbContext(typeof(M79ClimbingContext))]
-    partial class M79ClimbingContextModelSnapshot : ModelSnapshot
+    [Migration("20250225170840_UpdatePlayerStats")]
+    partial class UpdatePlayerStats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.2");

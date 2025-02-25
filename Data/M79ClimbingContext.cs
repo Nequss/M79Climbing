@@ -15,5 +15,7 @@ namespace M79Climbing.Data
         }
 
         public DbSet<M79Climbing.Models.Cap> Cap { get; set; } = default!;
+        public DbSet<PlayerStats> PlayerStats { get; set; } = default!;
+
     }
 }

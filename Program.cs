@@ -35,6 +35,12 @@ builder.Services.AddSingleton<TcpService>();
 // Add WebSocket 
 builder.Services.AddSingleton<WebSocketService>();
 
+// Add Scoped HighscoreService
+builder.Services.AddScoped<HighscoreService>();
+
+// Add Scoped PlayerStatsService
+builder.Services.AddScoped<PlayerStatsService>();
+
 var app = builder.Build();
 
 // Apply migrations at startup

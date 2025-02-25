@@ -18,7 +18,8 @@ namespace M79Climbing.Controllers
         private readonly HttpClient _httpClient;
         private readonly TcpService _tcpService;
         private readonly WebSocketService _webSocketService;
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        private readonly HighscoreService _highscoreService;
+        private readonly PlayerStatsService _playerStatsService;
 
         private static bool _isSubscribed = false;
         private const string CHANNEL = "ServerInfo"; // Define channel name as constant
@@ -28,13 +29,15 @@ namespace M79Climbing.Controllers
             HttpClient httpClient,
             TcpService tcpService,
             WebSocketService webSocketService,
-            IServiceScopeFactory serviceScopeFactory
+            HighscoreService highscoreService,
+            PlayerStatsService playerStatsService
         )
         {
             _httpClient = httpClient;
             _tcpService = tcpService;
             _webSocketService = webSocketService;
-            _serviceScopeFactory = serviceScopeFactory;
+            _highscoreService = highscoreService;
+            _playerStatsService = playerStatsService;
 
             if (!_isSubscribed)
             {
@@ -51,30 +54,44 @@ namespace M79Climbing.Controllers
                 try
                 {
                     string[] parts = message.Split(',');
-                    if (parts.Length >= 5)
-                    {
-                        // Create a new scope to get a fresh DbContext instance
-                        using (var scope = _serviceScopeFactory.CreateScope())
-                        {
-                            var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
+                    await _highscoreService.SaveHighscoreAsync(parts);
 
-                            var cap = new Cap
-                            {
-                                Ip = parts[1],
-                                Name = parts[2],
-                                Map = parts[3],
-                                Time = int.Parse(parts[4]),
-                                CapDate = DateTime.Now
-                            };
-
-                            context.Cap.Add(cap);
-                            await context.SaveChangesAsync();
-                        }
-                    }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine($"Error saving highscore: {ex.Message}");
+                }
+            }
+            // Check if it's a player stat
+            else if (message.StartsWith("P$"))
+            {
+                try
+                {
+                    string[] parts = message.Split(',');
+
+                    // Check if player already exists by IP or Name
+                    var playerStats = await _playerStatsService.FindByIpOrNameAsync(parts[0], parts[1]);
+
+                    if (playerStats != null)
+                    {
+                        // Player exists, sum the new data with existing data
+                        playerStats.GrenadesThrown += int.Parse(parts[2]);
+                        playerStats.M79ShotsFired += int.Parse(parts[3]);
+                        playerStats.TimeSpentOnServer += TimeSpan.FromSeconds(int.Parse(parts[4]));
+                        playerStats.MapFinishes += int.Parse(parts[5]);
+                        playerStats.Respawns += int.Parse(parts[6]);
+
+                        await _playerStatsService.UpdatePlayerStatAsync(playerStats);
+                    }
+                    else
+                    {
+                        // Player does not exist, create a new player stat
+                        await _playerStatsService.SavePlayerStatAsync(parts);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error saving player stats: {ex.Message}");
                 }
             }
             else
