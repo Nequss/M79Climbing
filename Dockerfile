@@ -27,12 +27,17 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
-# Create a script to initialize the database with proper permissions
+# Create a script to handle the database file permissions
 RUN echo '#!/bin/bash\n\
-if [ ! -f /app/app.db ]; then\n\
-  touch /app/app.db\n\
+# Ensure the database file has proper permissions\n\
+if [ -f /app/app.db ]; then\n\
+  echo "Setting permissions for existing database file"\n\
+  chmod 666 /app/app.db\n\
+  echo "Database file permissions set to 666"\n\
 fi\n\
-chmod 666 /app/app.db\n\
+\n\
+# Start the application\n\
+echo "Starting application..."\n\
 exec dotnet M79Climbing.dll\n\
 ' > /app/entrypoint.sh && \
 chmod +x /app/entrypoint.sh
