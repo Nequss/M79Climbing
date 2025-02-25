@@ -27,14 +27,33 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+# Create data directory
+RUN mkdir -p /app/data
+
 # Create a script to handle the database file permissions
 RUN echo '#!/bin/bash\n\
-# Ensure the database file has proper permissions\n\
-if [ -f /app/app.db ]; then\n\
-  echo "Setting permissions for existing database file"\n\
-  chmod 666 /app/app.db\n\
-  echo "Database file permissions set to 666"\n\
+# Ensure the data directory is writable\n\
+chmod 777 /app/data\n\
+\n\
+# Ensure the database files have proper permissions\n\
+if [ -f /app/data/app.db ]; then\n\
+  echo "Setting permissions for main database file"\n\
+  chmod 666 /app/data/app.db\n\
 fi\n\
+\n\
+# Handle WAL file if it exists\n\
+if [ -f /app/data/app.db-wal ]; then\n\
+  echo "Setting permissions for WAL file"\n\
+  chmod 666 /app/data/app.db-wal\n\
+fi\n\
+\n\
+# Handle SHM file if it exists\n\
+if [ -f /app/data/app.db-shm ]; then\n\
+  echo "Setting permissions for SHM file"\n\
+  chmod 666 /app/data/app.db-shm\n\
+fi\n\
+\n\
+echo "All database files have proper permissions"\n\
 \n\
 # Start the application\n\
 echo "Starting application..."\n\

@@ -8,13 +8,14 @@ services:
     volumes:
       - source-code:/app/src:ro
       - dataprotection-keys:/root/.aspnet/DataProtection-Keys
-      - ./app.db:/app/app.db
+      - ./db-data:/app/data
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - ADMIN_USERNAME=${WEBSITE_ADMIN_USERNAME}
       - ADMIN_PASSWORD=${WEBSITE_ADMIN_PASSWORD}
       - SOLDAT_ADMIN_PASSWORD=${SOLDAT_ADMIN_PASSWORD}
+      - ConnectionStrings__M79ClimbingContext=Data Source=/app/data/app.db
     networks:
       - soldatserver_default
       - external-containers
