@@ -368,3 +368,6 @@ Properties/launchSettings.json
 # Shared Memory file,  Write-Ahead Log file
 *.db-shm
 *.db-wal
+
+# Ignore all files in the data directory
+db-data/*
