@@ -75,7 +75,7 @@ namespace M79Climbing.Controllers
                     if (playerStats != null)
                     {
                         // Player exists, sum the new data with existing data
-                        playerStats.GrenadesThrown += int.Parse(parts[2]);
+                        playerStats.GrenadesThrown += int.Parse(parts[3]);
                         playerStats.M79ShotsFired += int.Parse(parts[4]);
                         playerStats.TimeSpentOnServer += TimeSpan.FromSeconds(int.Parse(parts[5]));
                         playerStats.MapFinishes += int.Parse(parts[6]);

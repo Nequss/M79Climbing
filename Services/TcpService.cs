@@ -11,8 +11,6 @@ public class TcpService
     public delegate void MessageReceivedHandler(string message);
     public event MessageReceivedHandler OnMessageReceived;
 
-    // ... existing code ...
-
     private TcpClient _client;
     private NetworkStream _stream;
     private bool _isConnected;
@@ -40,7 +38,6 @@ public class TcpService
 
             byte[] commandBytes = Encoding.UTF8.GetBytes(command);
             await _stream.WriteAsync(commandBytes, 0, commandBytes.Length);
-            OnMessageReceived?.Invoke($"Sent command: {command.TrimEnd()}");
         }
         catch (Exception ex)
         {
@@ -104,7 +101,6 @@ public class TcpService
         }
     }
 
-    // Don't forget to implement IDisposable
     public void Dispose()
     {
         _stream?.Dispose();

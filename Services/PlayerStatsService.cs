@@ -58,29 +58,61 @@ namespace M79Climbing.Services
 
         public async Task<PlayerStats> FindByIpOrNameAsync(string ip = null, string name = null)
         {
+            Console.WriteLine($"FindByIpOrNameAsync called with IP: '{ip}', Name: '{name}'");
+
             using (var scope = _serviceScopeFactory.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
+                Console.WriteLine("Created database context");
 
                 var query = context.PlayerStats.AsQueryable();
+                Console.WriteLine("Created initial query");
 
                 // Use OR logic: find by IP or Name
                 if (!string.IsNullOrEmpty(ip) && !string.IsNullOrEmpty(name))
                 {
+                    Console.WriteLine($"Searching by both IP '{ip}' OR Name '{name}'");
                     query = query.Where(ps => ps.Ip == ip || ps.Name.Contains(name));
                 }
                 else if (!string.IsNullOrEmpty(ip))
                 {
+                    Console.WriteLine($"Searching by IP only: '{ip}'");
                     query = query.Where(ps => ps.Ip == ip);
                 }
                 else if (!string.IsNullOrEmpty(name))
                 {
+                    Console.WriteLine($"Searching by Name only: '{name}'");
                     query = query.Where(ps => ps.Name.Contains(name));
+                }
+                else
+                {
+                    Console.WriteLine("Warning: Both IP and Name are empty or null");
+                }
+
+                // Log the SQL query being executed (if possible)
+                try
+                {
+                    var sql = query.ToQueryString();
+                    Console.WriteLine($"Generated SQL query: {sql}");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Could not log SQL query: {ex.Message}");
                 }
 
                 // Use FirstOrDefaultAsync to return a single match or null if none is found
-                return await query.FirstOrDefaultAsync();
+                var result = await query.FirstOrDefaultAsync();
+
+                if (result != null)
+                {
+                    Console.WriteLine($"Found player: ID={result.Id}, Name='{result.Name}', IP='{result.Ip}'");
+                }
+                else
+                {
+                    Console.WriteLine("No matching player found");
+                }
+
+                return result;
             }
         }
     }
-}
