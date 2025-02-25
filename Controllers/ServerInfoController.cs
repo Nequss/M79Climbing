@@ -70,16 +70,16 @@ namespace M79Climbing.Controllers
                     string[] parts = message.Split(',');
 
                     // Check if player already exists by IP or Name
-                    var playerStats = await _playerStatsService.FindByIpOrNameAsync(parts[0], parts[1]);
+                    var playerStats = await _playerStatsService.FindByIpOrNameAsync(parts[1], parts[2]);
 
                     if (playerStats != null)
                     {
                         // Player exists, sum the new data with existing data
                         playerStats.GrenadesThrown += int.Parse(parts[2]);
-                        playerStats.M79ShotsFired += int.Parse(parts[3]);
-                        playerStats.TimeSpentOnServer += TimeSpan.FromSeconds(int.Parse(parts[4]));
-                        playerStats.MapFinishes += int.Parse(parts[5]);
-                        playerStats.Respawns += int.Parse(parts[6]);
+                        playerStats.M79ShotsFired += int.Parse(parts[4]);
+                        playerStats.TimeSpentOnServer += TimeSpan.FromSeconds(int.Parse(parts[5]));
+                        playerStats.MapFinishes += int.Parse(parts[6]);
+                        playerStats.Respawns += int.Parse(parts[7]);
 
                         await _playerStatsService.UpdatePlayerStatAsync(playerStats);
                     }

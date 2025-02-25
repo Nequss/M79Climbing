@@ -31,13 +31,13 @@ namespace M79Climbing.Services
 
                 var playerStats = new PlayerStats
                 {
-                    Ip = parts[0],
-                    Name = parts[1],
-                    GrenadesThrown = int.Parse(parts[2]),
-                    M79ShotsFired = int.Parse(parts[3]),
-                    TimeSpentOnServer = TimeSpan.FromSeconds(int.Parse(parts[4])),
-                    MapFinishes = int.Parse(parts[5]),
-                    Respawns = int.Parse(parts[6])
+                    Ip = parts[1],
+                    Name = parts[2],
+                    GrenadesThrown = int.Parse(parts[3]),
+                    M79ShotsFired = int.Parse(parts[4]),
+                    TimeSpentOnServer = TimeSpan.FromSeconds(int.Parse(parts[5])),
+                    MapFinishes = int.Parse(parts[6]),
+                    Respawns = int.Parse(parts[7])
                 };
 
                 context.PlayerStats.Add(playerStats);
