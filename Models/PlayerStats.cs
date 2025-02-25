@@ -16,7 +16,7 @@ namespace M79Climbing.Models
 
         public TimeSpan TimeSpentOnServer { get; set; }
 
-        public int MapFinishes { get; set; }
+        public int MapFinishes { get; set; } //Sike, actualy server visits by a a player
 
         public int Respawns { get; set; }
     }

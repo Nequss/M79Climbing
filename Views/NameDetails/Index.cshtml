@@ -10,24 +10,31 @@
 
 <h1>@name</h1>
 
+<hr class="divider"/>
+
 @if (playerStats != null)
 {
     <div class="player-stats-container">
         <div class="row">
             <div class="col-md-6">
                 <div class="player-stats-card">
-                    <h4>Statistics</h4>
-                    <p><strong>Total Caps:</strong> @ViewData["CapsCount"]</p>
-                    <p><strong>Map Finishes:</strong> @playerStats.MapFinishes</p>
-                    <p><strong>Respawns:</strong> @playerStats.Respawns</p>
+                    <p>  &#x1F947; Golds: @ViewData["Top1Count"]</p>
+                    <p>&#x1F948; Silvers: @ViewData["Top2Count"]</p>
+                    <p>&#x1F949; Bronzes: @ViewData["Top3Count"]</p>
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="player-stats-card">
-                    <h4>Other</h4>
-                    <p><strong>Grenades Thrown:</strong> @playerStats.GrenadesThrown</p>
-                    <p><strong>M79 Shots Fired:</strong> @playerStats.M79ShotsFired</p>
-                    <p><strong>Time Spent on Server:</strong> @playerStats.TimeSpentOnServer.</p>
+                    <p>Total Caps: @ViewData["CapsCount"]</p>
+                    <p>Visits: @playerStats.MapFinishes</p>  <!-- Sike, 2lazy-->
+                    <p>Playtime: @playerStats.TimeSpentOnServer.ToString(@"hh\h\ mm\m\ ss\s")</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="player-stats-card">
+                    <p>Respawns: @playerStats.Respawns</p>
+                    <p>Grenades Thrown: @playerStats.GrenadesThrown</p>
+                    <p>M79 Shots Fired: @playerStats.M79ShotsFired</p>
                 </div>
             </div>
         </div>
