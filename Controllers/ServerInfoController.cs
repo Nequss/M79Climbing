@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace M79Climbing.Controllers
 {
@@ -17,23 +18,23 @@ namespace M79Climbing.Controllers
         private readonly HttpClient _httpClient;
         private readonly TcpService _tcpService;
         private readonly WebSocketService _webSocketService;
-        private readonly M79ClimbingContext _context;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
         private static bool _isSubscribed = false;
         private const string CHANNEL = "ServerInfo"; // Define channel name as constant
 
         public ServerInfoController
         (
-            HttpClient httpClient, 
+            HttpClient httpClient,
             TcpService tcpService,
             WebSocketService webSocketService,
-            M79ClimbingContext context
+            IServiceScopeFactory serviceScopeFactory
         )
         {
             _httpClient = httpClient;
             _tcpService = tcpService;
             _webSocketService = webSocketService;
-            _context = context;
+            _serviceScopeFactory = serviceScopeFactory;
 
             if (!_isSubscribed)
             {
@@ -52,17 +53,23 @@ namespace M79Climbing.Controllers
                     string[] parts = message.Split(',');
                     if (parts.Length >= 5)
                     {
-                        var cap = new Cap
+                        // Create a new scope to get a fresh DbContext instance
+                        using (var scope = _serviceScopeFactory.CreateScope())
                         {
-                            Ip = parts[1],
-                            Name = parts[2],
-                            Map = parts[3],
-                            Time = int.Parse(parts[4]),
-                            CapDate = DateTime.Now
-                        };
+                            var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
 
-                        _context.Cap.Add(cap);
-                        await _context.SaveChangesAsync();
+                            var cap = new Cap
+                            {
+                                Ip = parts[1],
+                                Name = parts[2],
+                                Map = parts[3],
+                                Time = int.Parse(parts[4]),
+                                CapDate = DateTime.Now
+                            };
+
+                            context.Cap.Add(cap);
+                            await context.SaveChangesAsync();
+                        }
                     }
                 }
                 catch (Exception ex)
