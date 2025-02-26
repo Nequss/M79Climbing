@@ -21,12 +21,14 @@ namespace M79Climbing.Controllers
 
         public async Task<IActionResult> Index(string map)
         {
-            var times = await _context.Cap
-                .Where(c => c.Map == map) // Filter by map first
+            var times = _context.Cap
+                .Where(c => c.Map == map)
                 .GroupBy(c => c.Name)
+                .AsEnumerable() // Switch to LINQ-to-Objects
                 .Select(g => g.OrderBy(c => c.Time).FirstOrDefault())
-                .OrderBy(c => c.Time) // Order by Time in ascending order
-                .ToListAsync();
+                .OrderBy(c => c.Time)
+                .ToList();
+
 
             var capsCount = await _context.Cap
                 .Where(c => c.Map == map)

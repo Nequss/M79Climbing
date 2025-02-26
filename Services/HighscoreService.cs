@@ -43,25 +43,31 @@ namespace M79Climbing.Services
             {
                 var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
 
-                // Get all maps and rank the times directly
                 var mapsWithRanks = await context.Cap
                     .GroupBy(c => c.Map)
                     .Select(g => new
                     {
                         Map = g.Key,
-                        Rankings = g
-                            .OrderBy(c => c.Time)
-                            .Select((record, index) => new
-                            {
-                                Record = record,
-                                Rank = index + 1
-                            })
-                            .ToList()
+                        Records = g.OrderBy(c => c.Time).ToList() // Fetch records first
                     })
                     .ToListAsync();
 
+                // Rank the records in-memory
+                var rankedMaps = mapsWithRanks.Select(map => new
+                {
+                    Map = map.Map,
+                    Rankings = map.Records
+                        .Select((record, index) => new
+                        {
+                            Record = record,
+                            Rank = index + 1
+                        })
+                        .ToList()
+                }).ToList();
+
+
                 // Count top places for the specified player
-                foreach (var map in mapsWithRanks)
+                foreach (var map in rankedMaps)
                 {
                     // Top 1
                     if (map.Rankings.Count >= 1 &&
