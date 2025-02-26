@@ -1,4 +1,6 @@
-﻿@using M79Climbing.Helpers
+﻿<!-- Map Details Index -->
+
+@using M79Climbing.Helpers
 @model IEnumerable<M79Climbing.Models.Cap>
 
 @{
@@ -16,19 +18,57 @@
         <tr>
             <th>@Html.DisplayNameFor(model => model.First().Name)</th>
             <th>@Html.DisplayNameFor(model => model.First().Time)</th>
+            <th>Date</th>
+
         </tr>
     </thead>
     <tbody>
-        @foreach (var cap in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => cap.Name)
-                </td>
-                <td>
-                    @TimeHelper.ReturnTime(cap.Time)
-                </td>
-            </tr>
+        @{
+            int i = 0;
+
+            foreach (var cap in Model)
+            {
+                <tr>
+                    <td>
+                        @{
+                            if(i == 0)
+                            {
+                                <a asp-controller="NameDetails" asp-action="Index" asp-route-name="@cap.Name">
+                                    <p>&#x1F947; @Html.DisplayFor(modelItem => cap.Name)</p>
+                                </a>
+                            }
+                            else if (i == 1)
+                            {
+                                <a asp-controller="NameDetails" asp-action="Index" asp-route-name="@cap.Name">
+                                    <p>&#x1F948; @Html.DisplayFor(modelItem => cap.Name)</p>
+                                </a>
+
+                            }
+                            else if (i == 2)
+                            {
+                                <a asp-controller="NameDetails" asp-action="Index" asp-route-name="@cap.Name">
+                                    <p>&#x1F949; @Html.DisplayFor(modelItem => cap.Name)</p>
+                                </a>
+
+                            }
+                            else
+                            {
+                                <a asp-controller="NameDetails" asp-action="Index" asp-route-name="@cap.Name">
+                                    <p>@Html.DisplayFor(modelItem => cap.Name)</p>
+                                </a>
+                            }
+                        }
+                    </td>
+                    <td>
+                        @TimeHelper.ReturnTime(cap.Time)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => cap.CapDate)
+                    </td>
+                </tr>
+
+                i++;
+            }
         }
     </tbody>
 </table>

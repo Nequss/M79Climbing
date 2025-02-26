@@ -1,35 +1,73 @@
-﻿@model Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary
+﻿<!-- Api Index -->
+@model Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary
 
 @{
     ViewData["Title"] = "API Documentation";
 }
 
 <h1>API Documentation</h1>
-<p>Welcome to the M79 Climbing API. Below are the available endpoints and how to use them.</p>
+<p>Welcome to the M79 Climb API. Below are the available endpoints and how to use them.</p>
 
-<h2>1. Get All Times for a Map</h2>
-<p><strong>Endpoint:</strong> <code>GET /times/{playerIp}/{playerName}/{mapName}</code></p>
-<p><strong>Description:</strong> Retrieves all recorded times   for a given map, filtered by player name or IP.</p>
-<p><strong>Ex. Response:</strong></p>
-<pre>
-Player1 575 2025-02-19
-Player1 652 2025-02-18
-Player1 743 2025-01-11
-</pre>
+<hr class="divider" />
 
-<h2>2. Get Best Times for a Map</h2>
-<p><strong>Endpoint:</strong> <code>GET /besttimes/{mapName}/{x}</code></p>
-<p><strong>Description:</strong> Retrieves the top X best times (in soldat server ticks) for a given map.</p>
-<p><strong>Ex. Response:</strong></p>
-<pre>
-Player1 1003 2025-02-19
-Player2 1110 2025-01-15
-Player3 1150 2025-01-11
-</pre>
+<!-- Get X Best Times for a Map -->
+<details>
+    <summary><h2>Get X Map's Best Caps</h2></summary>
+    <p><strong>Endpoint:</strong> <code>GET /besttimes/{mapName}/{x}</code></p>
+    <p><strong>Description:</strong> Retrieves the top X best times for a given map.</p>
+    <p><strong>Ex.:</strong> <code>https://m79climb.nequs.space/api/besttimes/m79_Hardplan/5</code></p>
+    <p><strong>Ex. Response:</strong></p>
+    <pre>
+Player1 01:15:124 2025-02-19
+Player2 02:30:853 2025-01-15
+Player3 02:05:229 2025-01-11
+    </pre>
+</details>
+
+<hr class="divider" />
+
+<!-- Get Player's X BestTimes for a Map -->
+<details>
+    <summary><h2>Get X Player's Best Caps</h2></summary>
+    <p><strong>Endpoint:</strong> <code>GET /times/{playerIp}/{playerName}/{mapName}/{x}</code></p>
+    <p><strong>Ex.:</strong> <code>https://m79climb.nequs.space/api/times/127.0.0.1/Nequs/m79_Hardplan/5</code></p>
+    <p><strong>Description:</strong> Retrieves top X times for a given map, filtered by player name or IP. If you dont know ip, put anything ex. 0</p>
+    <p><strong>Ex. Response:</strong></p>
+    <pre>
+Player1 00:05:824 2025-02-19 01:12:12
+Player1 00:05:824 2025-02-18 21:15:53
+Player1 00:05:824 2025-01-11 22:32:53
+Player1 00:05:824 2025-04-22 11:10:53
+Player1 00:05:824 2025-01-01 05:45:53
+    </pre>
+</details>
+
+<hr class="divider" />
+
+<!-- Get Player Stats -->
+<details>
+    <summary><h2>Get Player Stats</h2></summary>
+    <p><strong>Endpoint:</strong> <code>GET /playerstats/{playerName}</code></p>
+    <p><strong>Ex.:</strong> <code>https://m79climb.nequs.space/api/playerstats/Nequs</code></p>
+    <p><strong>Description:</strong> Retrieves the player stats such as grenades thrown, M79 shots fired, server visits, and respawns.</p>
+    <p><strong>Ex. JSON Response:</strong></p>
+    <pre>
+[
+  {
+    "Name": "Nequs",
+    "GrenadesThrown": 100,
+    "M79ShotsFired": 250,
+    "TimeSpentOnServer": "01:23:45",
+    "ServerVisits": 5,
+    "Respawns": 30
+  }
+]
+    </pre>
+</details>
+
+<hr class="divider" />
+
+<!-- Error Handling -->
 <h2>Error Handling</h2>
 <p>In case of an error, the API returns an appropriate HTTP status code along with an error message.</p>
-
-<p>
-    <img src="/images/discord-icon.png" width="50" height="50" />
-    Contact <strong>_nequs</strong> on Discord if you have any feedback! 
-</p>
+<p>Contact <strong>_nequs</strong> on Discord if you have any suggestions or problems!</p>

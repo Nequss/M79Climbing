@@ -1,4 +1,6 @@
-﻿@using M79Climbing.Helpers
+﻿<!-- Name Details Index -->
+
+@using M79Climbing.Helpers
 @model IEnumerable<M79Climbing.Models.Cap>
 
 @{
@@ -16,21 +18,21 @@
 {
     <div class="player-stats-container">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="player-stats-card">
                     <p>  &#x1F947; Golds: @ViewData["Top1Count"]</p>
                     <p>&#x1F948; Silvers: @ViewData["Top2Count"]</p>
                     <p>&#x1F949; Bronzes: @ViewData["Top3Count"]</p>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="player-stats-card">
                     <p>Total Caps: @ViewData["CapsCount"]</p>
                     <p>Visits: @playerStats.MapFinishes</p>  <!-- Sike, 2lazy-->
                     <p>Playtime: @playerStats.TimeSpentOnServer.ToString(@"hh\h\ mm\m\ ss\s")</p>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
                 <div class="player-stats-card">
                     <p>Respawns: @playerStats.Respawns</p>
                     <p>Grenades Thrown: @playerStats.GrenadesThrown</p>
@@ -53,7 +55,9 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => cap.Map)
+                    <a asp-controller="MapDetails" asp-action="Index" asp-route-name="@cap.Map">
+                        @Html.DisplayFor(modelItem => cap.Map)
+                    </a>
                 </td>
                 <td>
                     @TimeHelper.ReturnTime(cap.Time)

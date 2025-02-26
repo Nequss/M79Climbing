@@ -87,6 +87,20 @@ body {
         box-shadow: 0 0 5px #BBCC66;
     }
 
+#a {
+    color: white;
+}
+
+    #a:hover {
+        color: #BBCC66;
+        text-decoration-line: none;
+    }
+
+    #a:active {
+        color: #BBCC66;
+        text-decoration-line: none;
+    }
+
 /* Leaderboard css */
 .leaderboardHeader {
     font-size: 3em;
@@ -253,6 +267,17 @@ hr.divider {
     #sendButton:hover {
         color: #BBCC66;
         background-color: transparent;
+    }
+
+/* Remove the default arrow in <summary> */
+details summary {
+    list-style-type: none;
+    cursor: pointer; /* Optional: Make the cursor appear clickable */
+}
+
+    /* Change color of <h2> inside <summary> on hover */
+    details summary:hover h2 {
+        color: #BBCC66; /* Change this to any color you prefer */
     }
 
 /*********** Change autocomplete styles in WebKit ************

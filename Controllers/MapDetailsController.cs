@@ -17,7 +17,6 @@ namespace M79Climbing.Controllers
         public MapDetailsController(M79ClimbingContext context)
         {
             _context = context;
-
         }
 
         public async Task<IActionResult> Index(string map)
@@ -26,6 +25,7 @@ namespace M79Climbing.Controllers
                 .Where(c => c.Map == map) // Filter by map first
                 .GroupBy(c => c.Name)
                 .Select(g => g.OrderBy(c => c.Time).FirstOrDefault())
+                .OrderBy(c => c.Time) // Order by Time in ascending order
                 .ToListAsync();
 
             var capsCount = await _context.Cap

@@ -13,6 +13,7 @@ namespace M79Climbing.Services
             _serviceScopeFactory = serviceScopeFactory;
         }
 
+        // Save highscore to database
         public async Task SaveHighscoreAsync(string[] parts)
         {
             using (var scope = _serviceScopeFactory.CreateScope())
@@ -32,6 +33,8 @@ namespace M79Climbing.Services
                 await context.SaveChangesAsync();
             }
         }
+
+        // Get amount of top1, top2, top3 caps for a player
         public async Task<int[]> GetTopPlacesCountsAsync(string name)
         {
             int[] results = new int[3]; // Array to hold top1, top2, top3 counts
@@ -40,58 +43,52 @@ namespace M79Climbing.Services
             {
                 var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
 
-                // Retrieve records by Name
-                var playerRecords = await context.Cap
-                    .Where(c => c.Name == name)
-                    .ToListAsync();
-
-                // Get all maps with their records ordered by time
-                var mapsWithRecords = await context.Cap
+                // Get all maps and rank the times directly
+                var mapsWithRanks = await context.Cap
                     .GroupBy(c => c.Map)
                     .Select(g => new
                     {
                         Map = g.Key,
-                        Records = g.OrderBy(c => c.Time).ToList()
+                        Rankings = g
+                            .OrderBy(c => c.Time)
+                            .Select((record, index) => new
+                            {
+                                Record = record,
+                                Rank = index + 1
+                            })
+                            .ToList()
                     })
                     .ToListAsync();
 
-                // For each map, check if player has top1, top2, or top3 place
-                foreach (var map in mapsWithRecords)
+                // Count top places for the specified player
+                foreach (var map in mapsWithRanks)
                 {
-                    // Check top1 (if map has at least 1 record)
-                    if (map.Records.Count >= 1)
+                    // Top 1
+                    if (map.Rankings.Count >= 1 &&
+                        map.Rankings[0].Record.Name == name)
                     {
-                        var top1Record = map.Records[0];
-                        if (playerRecords.Any(r => r.Map == map.Map && r.Time == top1Record.Time))
-                        {
-                            results[0]++;
-                        }
+                        results[0]++;
                     }
 
-                    // Check top2 (if map has at least 2 records)
-                    if (map.Records.Count >= 2)
+                    // Top 2
+                    if (map.Rankings.Count >= 2 &&
+                        map.Rankings[1].Record.Name == name)
                     {
-                        var top2Record = map.Records[1];
-                        if (playerRecords.Any(r => r.Map == map.Map && r.Time == top2Record.Time))
-                        {
-                            results[1]++;
-                        }
+                        results[1]++;
                     }
 
-                    // Check top3 (if map has at least 3 records)
-                    if (map.Records.Count >= 3)
+                    // Top 3
+                    if (map.Rankings.Count >= 3 &&
+                        map.Rankings[2].Record.Name == name)
                     {
-                        var top3Record = map.Records[2];
-                        if (playerRecords.Any(r => r.Map == map.Map && r.Time == top3Record.Time))
-                        {
-                            results[2]++;
-                        }
+                        results[2]++;
                     }
                 }
             }
 
             return results;
         }
+
     }
 }
 

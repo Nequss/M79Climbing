@@ -36,7 +36,7 @@ namespace M79Climbing.Services
                     GrenadesThrown = int.Parse(parts[3]),
                     M79ShotsFired = int.Parse(parts[4]),
                     TimeSpentOnServer = TimeSpan.FromSeconds(int.Parse(parts[5])),
-                    MapFinishes = int.Parse(parts[6]),
+                    MapFinishes = int.Parse(parts[6]), //visit
                     Respawns = int.Parse(parts[7])
                 };
 
