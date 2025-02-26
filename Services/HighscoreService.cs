@@ -70,31 +70,24 @@ namespace M79Climbing.Services
                 foreach (var map in rankedMaps)
                 {
                     // Top 1
-                    if (map.Rankings.Count == 1 &
-                        map.Rankings[0].Record.Name == name)
-                    {
-                        results[0]++;
-                    }
+                    if (map.Rankings.Count == 1)
+                        if(map.Rankings[0].Record.Name == name)
+                            results[0]++;
 
                     // Top 2
-                    if (map.Rankings.Count >= 2 &
-                        map.Rankings[1].Record.Name == name)
-                    {
-                        results[1]++;
-                    }
+                    if (map.Rankings.Count >= 2)
+                        if (map.Rankings[1].Record.Name == name)
+                            results[1]++;
 
                     // Top 3
-                    if (map.Rankings.Count >= 3 &
-                        map.Rankings[2].Record.Name == name)
-                    {
+                    if (map.Rankings.Count >= 3)
+                        if(map.Rankings[2].Record.Name == name)
                         results[2]++;
-                    }
                 }
             }
 
             return results;
         }
-
     }
 }
 

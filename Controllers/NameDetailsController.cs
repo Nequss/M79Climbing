@@ -44,9 +44,10 @@ namespace M79Climbing.Controllers
             ViewData["CapsCount"] = times.Count;
             ViewData["PlayerStats"] = playerStats;
 
-            ViewData["Top1Count"] = topAmounts[0];
-            ViewData["Top2Count"] = topAmounts[1];
-            ViewData["Top3Count"] = topAmounts[2];
+            // Safely check if there are enough elements in topAmounts
+            ViewData["Top1Count"] = topAmounts.Length > 0 ? topAmounts[0] : 0;
+            ViewData["Top2Count"] = topAmounts.Length > 1 ? topAmounts[1] : 0;
+            ViewData["Top3Count"] = topAmounts.Length > 2 ? topAmounts[2] : 0;
 
             return View(times);
         }
