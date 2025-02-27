@@ -58,17 +58,33 @@ namespace M79Climbing.Services
             {
                 var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
 
-                var groupedMaps = await context.Cap
-                    .GroupBy(c => c.Map)
+                // Step 1: Order all records by Time
+                var orderedRecords = await context.Cap
+                    .OrderBy(c => c.Time)
                     .ToListAsync();
 
-                var top2Count = groupedMaps
-                    .Select(g => g.OrderBy(c => c.Time).Skip(1).FirstOrDefault())
-                    .Count(record => record != null && record.Name == name);
+                // Step 2: Group ordered records by Map
+                var groupedMaps = orderedRecords
+                    .GroupBy(c => c.Map);
+
+                // Step 3: Select the second record (Top 2) from each group
+                var top2Records = groupedMaps
+                    .Select(g => g.Skip(1).FirstOrDefault());
+
+                // Step 4: Count how many of the Top 2 records match the given name
+                int top2Count = 0;
+
+                foreach (var record in top2Records)
+                {
+                    if (record != null & record.Name == name)
+                        top2Count++;
+
+                }
 
                 return top2Count;
             }
         }
+
 
         public async Task<int> GetTop3CountAsync(string name)
         {
@@ -76,13 +92,28 @@ namespace M79Climbing.Services
             {
                 var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
 
-                var groupedMaps = await context.Cap
-                    .GroupBy(c => c.Map)
+                // Step 1: Order all records by Time
+                var orderedRecords = await context.Cap
+                    .OrderBy(c => c.Time)
                     .ToListAsync();
 
-                var top3Count = groupedMaps
-                    .Select(g => g.OrderBy(c => c.Time).Skip(2).FirstOrDefault())
-                    .Count(record => record != null && record.Name == name);
+                // Step 2: Group ordered records by Map
+                var groupedMaps = orderedRecords
+                    .GroupBy(c => c.Map);
+
+                // Step 3: Select the second record (Top 2) from each group
+                var top2Records = groupedMaps
+                    .Select(g => g.Skip(2).FirstOrDefault());
+
+                // Step 4: Count how many of the Top 2 records match the given name
+                int top3Count = 0;
+
+                foreach (var record in top2Records)
+                {
+                    if (record != null & record.Name == name)
+                        top3Count++;
+
+                }
 
                 return top3Count;
             }
