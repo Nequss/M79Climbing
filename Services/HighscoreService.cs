@@ -74,12 +74,11 @@ namespace M79Climbing.Services
                 // Step 4: Count how many of the Top 2 records match the given name
                 int top2Count = 0;
 
-                foreach (var record in top2Records)
-                {
-                    if (record != null & record.Name == name)
-                        top2Count++;
+                if(top2Records.Any())
+                    foreach (var record in top2Records)
+                        if (record.Name == name)
+                            top2Count++;
 
-                }
 
                 return top2Count;
             }
@@ -102,18 +101,16 @@ namespace M79Climbing.Services
                     .GroupBy(c => c.Map);
 
                 // Step 3: Select the second record (Top 2) from each group
-                var top2Records = groupedMaps
+                var top3Records = groupedMaps
                     .Select(g => g.Skip(2).FirstOrDefault());
 
                 // Step 4: Count how many of the Top 2 records match the given name
                 int top3Count = 0;
 
-                foreach (var record in top2Records)
-                {
-                    if (record != null & record.Name == name)
-                        top3Count++;
-
-                }
+                if (top3Records.Any())
+                    foreach (var record in top3Records)
+                        if (record.Name == name)
+                            top3Count++;
 
                 return top3Count;
             }
