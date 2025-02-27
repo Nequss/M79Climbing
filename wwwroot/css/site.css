@@ -64,10 +64,12 @@ body {
     .nav-link:hover {
         color: #BBCC66;
     }
-
-    .nav-link.active {
-        color: #BBCC66;
+    .nav-link:focus {
+        color: white;
     }
+
+
+
 
 .navbar-toggler-icon {
     filter: invert(100%); 
