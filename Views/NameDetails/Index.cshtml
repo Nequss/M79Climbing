@@ -45,18 +45,21 @@
 
 <hr class="divider" />
 
+<table class="table">
+    <thead>
+        <tr>
+            <th>Map</th>
+            <th>Time</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+</table>
+
 @foreach (var group in Model)
 {
     <details>
         <summary>
             <table class="table">
-                <thead>
-                    <tr>
-                        <th>Map</th>
-                        <th>Time</th>
-                        <th>Date</th>
-                    </tr>
-                </thead>
                 <tbody>
                     <tr>
                         <td>@group.First().Map</td>
