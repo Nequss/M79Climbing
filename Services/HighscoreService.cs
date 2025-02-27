@@ -40,11 +40,13 @@ namespace M79Climbing.Services
             {
                 var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
 
-                var top1Count = await context.Cap
+                var groupedMaps = await context.Cap
                     .GroupBy(c => c.Map)
+                    .ToListAsync();
+
+                var top1Count = groupedMaps
                     .Select(g => g.OrderBy(c => c.Time).FirstOrDefault())
-                    .Where(record => record != null && record.Name == name)
-                    .CountAsync();
+                    .Count(record => record != null && record.Name == name);
 
                 return top1Count;
             }
@@ -56,11 +58,13 @@ namespace M79Climbing.Services
             {
                 var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
 
-                var top2Count = await context.Cap
+                var groupedMaps = await context.Cap
                     .GroupBy(c => c.Map)
+                    .ToListAsync();
+
+                var top2Count = groupedMaps
                     .Select(g => g.OrderBy(c => c.Time).Skip(1).FirstOrDefault())
-                    .Where(record => record != null && record.Name == name)
-                    .CountAsync();
+                    .Count(record => record != null && record.Name == name);
 
                 return top2Count;
             }
@@ -72,11 +76,13 @@ namespace M79Climbing.Services
             {
                 var context = scope.ServiceProvider.GetRequiredService<M79ClimbingContext>();
 
-                var top3Count = await context.Cap
+                var groupedMaps = await context.Cap
                     .GroupBy(c => c.Map)
+                    .ToListAsync();
+
+                var top3Count = groupedMaps
                     .Select(g => g.OrderBy(c => c.Time).Skip(2).FirstOrDefault())
-                    .Where(record => record != null && record.Name == name)
-                    .CountAsync();
+                    .Count(record => record != null && record.Name == name);
 
                 return top3Count;
             }
