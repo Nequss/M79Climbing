@@ -86,7 +86,9 @@ namespace M79Climbing.Controllers
                 return Content("No player found");
 
             // Retrieve the top counts for the player
-            int[] topCount = await _highscoreService.GetTopPlacesCountsAsync(playerName);
+            int top1 = await _highscoreService.GetTop1CountAsync(record.Name);
+            int top2 = await _highscoreService.GetTop2CountAsync(record.Name);
+            int top3 = await _highscoreService.GetTop3CountAsync(record.Name);
 
             // Get the total number of caps for the player
             var caps = await _context.Cap
@@ -100,9 +102,9 @@ namespace M79Climbing.Controllers
             // Prepare the result with the top count inserted
             var result = new
             {
-                Top1 = topCount[0],
-                Top2 = topCount[1],
-                Top3 = topCount[2],
+                Top1 = top1,
+                Top2 = top2,
+                Top3 = top3,
                 TotalCaps = capsCount,
                 record.GrenadesThrown,
                 record.M79ShotsFired,
