@@ -1,7 +1,7 @@
 ﻿<!-- Name Details Index -->
 
 @using M79Climbing.Helpers
-@model IEnumerable<M79Climbing.Models.Cap>
+@model IEnumerable<IGrouping<string, Cap>>
 
 @{
     var name = ViewData["Name"] as string;
@@ -27,42 +27,56 @@
             </div>
             <div class="col-md-4">
                 <div class="player-stats-card">
-                    <p>Total Caps: @ViewData["CapsCount"]</p>
-                    <p>Visits: @playerStats.MapFinishes</p>  <!-- Sike, 2lazy-->
-                    <p>Playtime: @playerStats.TimeSpentOnServer.ToString(@"hh\h\ mm\m\ ss\s")</p>
+                    <p>&#x1F3C1; Total Caps: @ViewData["CapsCount"]</p>
+                    <p>&#x1F4CB; Visits: @playerStats.MapFinishes</p>  <!-- Sike, 2lazy-->
+                    <p>&#x23F3; Playtime: @playerStats.TimeSpentOnServer.ToString(@"hh\h\ mm\m\ ss\s")</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="player-stats-card">
-                    <p>Respawns: @playerStats.Respawns</p>
-                    <p>Grenades Thrown: @playerStats.GrenadesThrown</p>
-                    <p>M79 Shots Fired: @playerStats.M79ShotsFired</p>
+                    <p>&#x1F501; Respawns: @playerStats.Respawns</p>
+                    <p>&#x1F4A3; Grenades Thrown: @playerStats.GrenadesThrown</p>
+                    <p>&#x1F4A5; M79 Shots Fired: @playerStats.M79ShotsFired</p>
                 </div>
             </div>
         </div>
     </div>
 }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.First().Map)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Time)</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var cap in Model)
-        {
-            <tr>
-                <td>
-                    <a asp-controller="MapDetails" asp-action="Index" asp-route-name="@cap.Map">
-                        @Html.DisplayFor(modelItem => cap.Map)
-                    </a>
-                </td>
-                <td>
-                    @TimeHelper.ReturnTime(cap.Time)
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<hr class="divider" />
+
+@foreach (var group in Model)
+{
+    <details>
+        <summary>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Map</th>
+                        <th>Time</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@group.First().Map</td>
+                        <td>@TimeHelper.ReturnTime(group.First().Time)</td>
+                        <td>@group.First().CapDate.ToString("dd-MM-yyyy HH:mm:ss")</td>
+                    </tr>
+                </tbody>
+            </table>
+        </summary>
+        <table class="table">
+            <tbody>
+                @foreach (var cap in group.Skip(1))
+                {
+                    <tr>
+                        <td>@cap.Map</td>
+                        <td>@TimeHelper.ReturnTime(cap.Time)</td>
+                        <td>@cap.CapDate.ToString("dd-MM-yyyy HH:mm:ss")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </details>
+}

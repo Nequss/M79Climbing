@@ -34,11 +34,11 @@ namespace M79Climbing.Controllers
         public async Task<IActionResult> GetAllTimes(string playerIp, string playerName, string mapName, int x)
         {
             var records = await _context.Cap
-                .Where(c => c.Map == mapName && (c.Name == playerName || c.Ip == playerIp))
-                .OrderBy(c => c.Time)
-                .Take(x) // Limit the results to a maximum of 5 records
+                .GroupBy(c => c.Map)
+                .Select(g => g.OrderBy(c => c.Time).FirstOrDefault())
+                .Take(x)
                 .ToListAsync();
-
+             
             if (records.Count == 0)
                 return Content("No records found");
 

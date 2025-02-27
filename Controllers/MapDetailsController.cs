@@ -29,7 +29,6 @@ namespace M79Climbing.Controllers
                 .OrderBy(c => c.Time)
                 .ToList();
 
-
             var capsCount = await _context.Cap
                 .Where(c => c.Map == map)
                 .CountAsync();

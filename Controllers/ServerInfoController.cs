@@ -67,6 +67,7 @@ namespace M79Climbing.Controllers
             {
                 try
                 {
+                    Console.WriteLine($"Received player stats: {message}");
                     string[] parts = message.Split(',');
 
                     // Check if player already exists by IP or Name
