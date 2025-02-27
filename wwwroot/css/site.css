@@ -270,6 +270,67 @@ hr.divider {
         background-color: transparent;
     }
 
+
+ /*LEADERBOARD ALIGNMENT IMPROVE IT*/
+#customID {
+
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    table-layout: fixed; /* Ensures consistent column width */
+}
+
+    #customID th, #customID td {
+        padding: 10px;
+        border-bottom: 1px solid yellow;
+        white-space: nowrap; /* Prevents text from wrapping */
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    #customID th {
+        font-weight: bold;
+    }
+
+    #customID tbody tr td {
+        float:left;
+        text-align: left;
+        width:432px;
+    }
+
+#custom{
+    display:flex;
+    width:100%;
+}
+
+
+
+#custom tbody {
+    width: 100%;
+}
+    #custom tr {
+        display: flex;
+        width: 100%;
+    }
+
+    #custom td {
+        flex-grow:1;
+        width: 400px
+    }
+
+
+    #custom td:last-child {
+        flex-grow: 1;
+        max-width:420px;
+    }
+
+    #top-table th{
+        min-width: 400px;
+        width:400px;
+        max-width: 400px;
+    }
+/*END LEADERBOARD ALIGNMENT IMPROVE IT*/
+
 /* Remove the default arrow in <summary> */
 details summary {
     list-style-type: none;

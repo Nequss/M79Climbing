@@ -45,13 +45,13 @@
 
 <hr class="divider" />
 
-<table class="table">
+<table class="table" id="top-table">
     <thead>
         <tr>
             <th>Map</th>
             <th>Time</th>
             <th>Date</th>
-        </tr>
+        </tr>w
     </thead>
 </table>
 
@@ -59,7 +59,7 @@
 {
     <details>
         <summary>
-            <table class="table">
+            <table class="table" id ="customID">
                 <tbody>
                     <tr>
                         <td>@group.First().Map</td>
@@ -69,7 +69,7 @@
                 </tbody>
             </table>
         </summary>
-        <table class="table">
+        <table class="table" id="custom">
             <tbody>
                 @foreach (var cap in group.Skip(1))
                 {
