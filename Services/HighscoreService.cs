@@ -69,21 +69,15 @@ namespace M79Climbing.Services
 
                 // Step 3: Select the second record (Top 2) from each group
                 var top2Records = groupedMaps
-                    .Select(g => g.Skip(1).FirstOrDefault());
+                    .Select(g => g.Skip(1).FirstOrDefault())
+                    .Where(record => record != null); // Filter out null records
 
                 // Step 4: Count how many of the Top 2 records match the given name
-                int top2Count = 0;
-
-                if(top2Records.Any())
-                    foreach (var record in top2Records)
-                        if (record.Name == name)
-                            top2Count++;
-
+                int top2Count = top2Records.Count(record => record.Name == name);
 
                 return top2Count;
             }
         }
-
 
         public async Task<int> GetTop3CountAsync(string name)
         {
@@ -100,21 +94,18 @@ namespace M79Climbing.Services
                 var groupedMaps = orderedRecords
                     .GroupBy(c => c.Map);
 
-                // Step 3: Select the second record (Top 2) from each group
+                // Step 3: Select the third record (Top 3) from each group
                 var top3Records = groupedMaps
-                    .Select(g => g.Skip(2).FirstOrDefault());
+                    .Select(g => g.Skip(2).FirstOrDefault())
+                    .Where(record => record != null); // Filter out null records
 
-                // Step 4: Count how many of the Top 2 records match the given name
-                int top3Count = 0;
-
-                if (top3Records.Any())
-                    foreach (var record in top3Records)
-                        if (record.Name == name)
-                            top3Count++;
+                // Step 4: Count how many of the Top 3 records match the given name
+                int top3Count = top3Records.Count(record => record.Name == name);
 
                 return top3Count;
             }
         }
+
     }
 }
 
