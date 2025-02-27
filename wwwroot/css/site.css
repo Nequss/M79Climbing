@@ -155,7 +155,7 @@ margin: 20px 0;
 }
 
     .table a:hover {
-        text-decoration: underline;
+        text-decoration: none;
         color: #BBCC66;
      }
 
