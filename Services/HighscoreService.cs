@@ -85,13 +85,27 @@ namespace M79Climbing.Services
                     }
                 }
 
-                // Step 3: Select the second record (Top 2) from each group
+                // Step 3: Select the second record (Top 2) from each group, excluding the first place if it's the specified name
                 var top2Records = groupedMaps
-                    .Select(g => g.Skip(1).FirstOrDefault())
+                    .Select(g =>
+                    {
+                        var firstPlace = g.FirstOrDefault(); // Get the first place (best time)
+                        var secondPlace = g.Skip(1).FirstOrDefault(); // Get the second place
+                        if (firstPlace != null && firstPlace.Name == name)
+                        {
+                            // If the first place is the given name, exclude it and return the second fastest
+                            return secondPlace;
+                        }
+                        else
+                        {
+                            // Otherwise, return the first place if it's the second fastest
+                            return secondPlace != null ? secondPlace : firstPlace;
+                        }
+                    })
                     .Where(record => record != null); // Filter out null records
 
                 // Debugging output
-                Console.WriteLine("\nTop 2 Records (Second in each group):");
+                Console.WriteLine("\nTop 2 Records (Second in each group excluding the first if the user is first):");
                 foreach (var record in top2Records)
                 {
                     Console.WriteLine($"Name: {record.Name}, Map: {record.Map}, Time: {record.Time}");
@@ -105,6 +119,7 @@ namespace M79Climbing.Services
                 return top2Count;
             }
         }
+
 
         public async Task<int> GetTop3CountAsync(string name)
         {
@@ -139,13 +154,34 @@ namespace M79Climbing.Services
                     }
                 }
 
-                // Step 3: Select the third record (Top 3) from each group
+                // Step 3: Select the third record (Top 3) from each group, excluding the first and second if the user is already there
                 var top3Records = groupedMaps
-                    .Select(g => g.Skip(2).FirstOrDefault())
+                    .Select(g =>
+                    {
+                        var firstPlace = g.FirstOrDefault(); // Get the first place (best time)
+                        var secondPlace = g.Skip(1).FirstOrDefault(); // Get the second place
+                        var thirdPlace = g.Skip(2).FirstOrDefault(); // Get the third place
+
+                        if (firstPlace != null && firstPlace.Name == name)
+                        {
+                            // If the first place is the given name, exclude it and return the third fastest
+                            return thirdPlace;
+                        }
+                        else if (secondPlace != null && secondPlace.Name == name)
+                        {
+                            // If the second place is the given name, exclude it and return the third fastest
+                            return thirdPlace;
+                        }
+                        else
+                        {
+                            // Otherwise, return the third fastest or null if no third place exists
+                            return thirdPlace;
+                        }
+                    })
                     .Where(record => record != null); // Filter out null records
 
                 // Debugging output
-                Console.WriteLine("\nTop 3 Records (Third in each group):");
+                Console.WriteLine("\nTop 3 Records (Third in each group excluding first and second if the user is first or second):");
                 foreach (var record in top3Records)
                 {
                     Console.WriteLine($"Name: {record.Name}, Map: {record.Map}, Time: {record.Time}");
@@ -159,5 +195,6 @@ namespace M79Climbing.Services
                 return top3Count;
             }
         }
+
     }
 }
