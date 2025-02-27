@@ -37,17 +37,13 @@ namespace M79Climbing.Controllers
             // Fetch PlayerStats for the specific player
             var playerStats = await _playerStatsService.FindByIpOrNameAsync(name: name);
 
-            // Fetch top1, top2, top3 counts for the player
-            var topAmounts = await _highscoreService.GetTopPlacesCountsAsync(name: name);
-
             ViewData["Name"] = name;
             ViewData["CapsCount"] = times.Count;
             ViewData["PlayerStats"] = playerStats;
 
-            // Safely check if there are enough elements in topAmounts
-            ViewData["Top1Count"] = topAmounts.Length > 0 ? topAmounts[0] : 0;
-            ViewData["Top2Count"] = topAmounts.Length > 1 ? topAmounts[1] : 0;
-            ViewData["Top3Count"] = topAmounts.Length > 2 ? topAmounts[2] : 0;
+            ViewData["Top1Count"] = await _highscoreService.GetTop1CountAsync(name);
+            ViewData["Top2Count"] = await _highscoreService.GetTop2CountAsync(name);
+            ViewData["Top3Count"] = await _highscoreService.GetTop3CountAsync(name);
 
             return View(times);
         }
