@@ -34,6 +34,8 @@ namespace M79Climbing.Controllers
                 .ThenBy(c => c.Time)
                 .ToListAsync();
 
+            ViewData["CapsCount"] = times.Count;
+
             var groups = times.GroupBy(c => c.Map);
 
             // Fetch PlayerStats for the specific player

@@ -1,0 +1,60 @@
+﻿@model M79Climbing.Models.PlayerStats
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>PlayerStats</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Ip)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Ip)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.GrenadesThrown)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.GrenadesThrown)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.M79ShotsFired)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.M79ShotsFired)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TimeSpentOnServer)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TimeSpentOnServer)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MapFinishes)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.MapFinishes)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Respawns)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Respawns)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

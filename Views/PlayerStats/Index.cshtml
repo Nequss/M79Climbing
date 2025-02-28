@@ -1,0 +1,104 @@
+﻿@model IEnumerable<M79Climbing.Models.PlayerStats>
+
+@{
+    ViewData["Title"] = "Index";
+
+    var combinedStats = ViewData["CombinedStats"] as dynamic;
+
+}
+
+<h1 style="text-align: center;">Global Stats</h1>
+
+<hr class="divider" />
+
+<div class="player-stats-container text-nowrap">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="player-stats-card">
+                <p>&#x1F3C1; Total Caps: @ViewData["GlobalCapsCount"]</p>
+                <p>&#x1F4CB; Total Visits: @combinedStats.TotalVisits</p>  
+                <p>&#x23F3; Total Playtime: @combinedStats.TotalPlaytime.ToString(@"hh\h\ mm\m\ ss\s")</p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="player-stats-card">
+                <p>&#x1F501; Total Respawns: @combinedStats.TotalRespawns</p>
+                <p>&#x1F4A3; Total Grenades Thrown: @combinedStats.TotalGrenadesThrown</p>
+                <p>&#x1F4A5; Total M79 Shots Fired: @combinedStats.TotalM79ShotsFired</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="divider" />
+
+@{
+    if (User.IsInRole("Admin"))
+    {
+        <a class="btn btn-success" asp-action="Create">Create New</a>
+    }
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                Grenades Thrown
+            </th>
+            <th>
+                M79 Shots Fired
+            </th>
+            <th>
+                Playtime
+            </th>
+            <th>
+                Server Visits
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Respawns)
+            </th>
+                @if (User.IsInRole("Admin"))
+                {
+                    <th>
+                        Actions
+                    </th>
+                }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model) 
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GrenadesThrown)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.M79ShotsFired)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeSpentOnServer)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MapFinishes)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Respawns)
+                </td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        <a class="btn btn-danger" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

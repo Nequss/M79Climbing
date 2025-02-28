@@ -342,6 +342,17 @@ details summary {
         color: #BBCC66; /* Change this to any color you prefer */
     }
 
+
+/**** Player Page view ****/
+
+.player-stats-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+
 /*********** Change autocomplete styles in WebKit ************
 
 input:-webkit-autofill,

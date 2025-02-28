@@ -79,9 +79,8 @@ namespace M79Climbing.Controllers
                         playerStats.GrenadesThrown += int.Parse(parts[3]);
                         playerStats.M79ShotsFired += int.Parse(parts[4]);
                         
-                        Console.WriteLine(TimeSpan.FromSeconds(int.Parse(parts[5])));
-
                         playerStats.TimeSpentOnServer += TimeSpan.FromSeconds(int.Parse(parts[5]));
+
                         playerStats.MapFinishes += int.Parse(parts[6]);
                         playerStats.Respawns += int.Parse(parts[7]);
 
