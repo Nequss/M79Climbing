@@ -12,7 +12,7 @@ html {
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
@@ -23,21 +23,19 @@ html {
 body {
     margin-bottom: 60px;
     color: white;
-
     background-image: url('/images/soldatbg.png');
-    background-size: cover; 
+    background-size: cover;
     background-repeat: repeat;
     background-position: center;
-    
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    text-align: start;
 }
 
 .container {
@@ -51,9 +49,11 @@ body {
 .navbar-brand {
     color: white;
 }
+
     .navbar-brand:hover {
         color: #BBCC66;
     }
+
     .navbar-brand:active {
         color: #BBCC66;
     }
@@ -61,9 +61,11 @@ body {
 .nav-link {
     color: white;
 }
+
     .nav-link:hover {
         color: #BBCC66;
     }
+
     .nav-link:focus {
         color: white;
     }
@@ -72,13 +74,14 @@ body {
 
 
 .navbar-toggler-icon {
-    filter: invert(100%); 
+    filter: invert(100%);
     border: none;
 }
 
 .navbar-toggler {
     border: none;
 }
+
     .navbar-toggler:focus {
         border-color: transparent !important;
         box-shadow: 0 0 5px transparent;
@@ -117,49 +120,49 @@ body {
 
 /* Style for the entire table */
 .table {
-width: 100%;
-border-collapse: collapse;
-margin: 20px 0;
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
 }
 
-/* Table headers */
-.table thead {
-    background-color: transparent;
-    text-align: left;
-}
+    /* Table headers */
+    .table thead {
+        background-color: transparent;
+        text-align: left;
+    }
 
-.table th {
-    background-color: transparent;
-    padding: 10px;
-    font-weight: bold;
-    color: white;
-    border-bottom: 1px solid #BBCC66;
-}
+    .table th {
+        background-color: transparent;
+        padding: 10px;
+        font-weight: bold;
+        color: white;
+        border-bottom: 1px solid #BBCC66;
+    }
 
-/* Table rows */
-.table tbody tr {
-    background-color: transparent;
-    transition: background-color 0.3s ease;
-}
+    /* Table rows */
+    .table tbody tr {
+        background-color: transparent;
+        transition: background-color 0.3s ease;
+    }
 
-/* Table data cells */
-.table td {
-    background-color: transparent;
-    padding: 10px;
-    border-bottom: 1px solid #BBCC66;
-    color: white
-}
+    /* Table data cells */
+    .table td {
+        background-color: transparent;
+        padding: 10px;
+        border-bottom: 1px solid #BBCC66;
+        color: white
+    }
 
-/* Links inside the table */
-.table a {
-    color: white;
-    text-decoration: none;
-}
-
-    .table a:hover {
+    /* Links inside the table */
+    .table a {
+        color: white;
         text-decoration: none;
-        color: #BBCC66;
-     }
+    }
+
+        .table a:hover {
+            text-decoration: none;
+            color: #BBCC66;
+        }
 
 /* Server info shenanigans */
 
@@ -172,8 +175,8 @@ margin: 20px 0;
 
 .grid-container {
     flex-direction: column;
-    justify-content: center; 
-    align-items: center; 
+    justify-content: center;
+    align-items: center;
     display: grid;
     grid-template-columns: auto auto auto;
     gap: 40px;
@@ -181,36 +184,36 @@ margin: 20px 0;
 
 .grid-colum-two {
     align-items: flex-end;
-    margin-left: 100px; 
+    margin-left: 100px;
 }
 
 .button-container {
     text-align: center;
 }
 
-.button-container a {
-    color: white !important;
-    background-color: #252E1C;
-    border-color: #BBCC66;
-}
-
-    .button-container a:hover {
-        color: #BBCC66 !important; 
+    .button-container a {
+        color: white !important;
+        background-color: #252E1C;
         border-color: #BBCC66;
     }
+
+        .button-container a:hover {
+            color: #BBCC66 !important;
+            border-color: #BBCC66;
+        }
 
 .image-container {
     text-align: right;
 }
-   
+
 hr.divider {
-     border: 0;
-     border-top: 2px solid #BBCC66;
-}   
+    border: 0;
+    border-top: 2px solid #BBCC66;
+}
 
 .description-panel {
-     text-align: center; 
-     margin-top: 20px; 
+    text-align: center;
+    margin-top: 20px;
 }
 
 /* Server info Logs */
@@ -231,7 +234,6 @@ hr.divider {
 #messagesList {
     scrollbar-width: thin;
     scrollbar-color: #B7C764 transparent;
-    
 }
 
 /* Admin only message input */
@@ -261,6 +263,7 @@ hr.divider {
     padding: 10px;
     border-radius: 5px;
 }
+
     #sendButton:focus {
         box-shadow: none;
     }
@@ -271,64 +274,109 @@ hr.divider {
     }
 
 
- /*LEADERBOARD ALIGNMENT IMPROVE IT*/
-#customID {
-
+/*LEADERBOARD ALIGNMENT IMPROVE IT*/
+#outter-table-leaderboard {
     width: 100%;
+    margin: 5px 0;
     border-collapse: collapse;
     text-align: center;
     table-layout: fixed; /* Ensures consistent column width */
 }
 
-    #customID th, #customID td {
-        padding: 10px;
+    #outter-table-leaderboard th, #outter-table-leaderboard td {
+        padding: 0;
+        margin: 0;
         border-bottom: 1px solid yellow;
         white-space: nowrap; /* Prevents text from wrapping */
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
-    #customID th {
+    #outter-table-leaderboard tr:hover td {
+        color: #BBCC66;
+    }
+
+    #outter-table-leaderboard th {
         font-weight: bold;
     }
 
-    #customID tbody tr td {
-        float:left;
+    #outter-table-leaderboard tbody tr td {
+        float: left;
         text-align: left;
-        width:432px;
+        width: 432px;
     }
 
-#custom{
-    display:flex;
-    width:100%;
-}
-
-
-
-#custom tbody {
+#inner-table-leaderboard {
+    display: flex;
     width: 100%;
 }
-    #custom tr {
+
+
+    #inner-table-leaderboard tbody {
+        width: 100%;
+    }
+
+    #inner-table-leaderboard tr {
         display: flex;
         width: 100%;
     }
 
-    #custom td {
-        flex-grow:1;
-        width: 400px
-    }
-
-
-    #custom td:last-child {
+    #inner-table-leaderboard td {
         flex-grow: 1;
-        max-width:420px;
+        width: 400px;
+        padding: 0;
     }
 
-    #top-table th{
-        min-width: 400px;
-        width:400px;
-        max-width: 400px;
+        #inner-table-leaderboard td:last-child {
+            flex-grow: 1;
+            max-width: 420px;
+        }
+
+#legend-table-leaderboard th {
+    min-width: 400px;
+    width: 400px;
+    max-width: 400px;
+}
+
+
+@media (max-width:1400px) {
+    #outter-table-leaderboard tbody tr td {
+        width: 370px;
     }
+
+
+}
+@media (max-width:1200px) {
+    #outter-table-leaderboard tbody tr td {
+        width: 310px;
+    }
+}
+
+@media (max-width:1200px) {
+    #outter-table-leaderboard tbody tr td {
+        width: 310px;
+    }
+}
+
+@media (max-width:992px) {
+    #outter-table-leaderboard tbody tr td {
+        width: 230px;
+    }
+}
+
+
+@media (max-width:768px) {
+    #outter-table-leaderboard tbody tr td {
+        width: 150px;
+    }
+}
+
+@media (max-width:488px) {
+    #outter-table-leaderboard tbody tr td {
+        width: 120px;
+    }
+}
+
 /*END LEADERBOARD ALIGNMENT IMPROVE IT*/
 
 /* Remove the default arrow in <summary> */
