@@ -45,7 +45,7 @@
 
 <hr class="divider" />
 
-<table class="table" id="top-table">
+<table class="table" id="legend-table-leaderboard">
     <thead>
         <tr>
             <th>Map</th>
@@ -59,7 +59,7 @@
 {
     <details>
         <summary>
-            <table class="table" id ="customID">
+            <table class="table" id="outter-table-leaderboard">
                 <tbody>
                     <tr>
                         <td>@group.First().Map</td>
@@ -69,7 +69,7 @@
                 </tbody>
             </table>
         </summary>
-        <table class="table" id="custom">
+        <table class="table" id="inner-table-leaderboard">
             <tbody>
                 @foreach (var cap in group.Skip(1))
                 {
