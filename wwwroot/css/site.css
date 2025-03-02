@@ -332,6 +332,10 @@ hr.divider {
             max-width: 420px;
         }
 
+    #inner-table-leaderboard:has(tbody){
+        margin:0;
+    }
+
 #legend-table-leaderboard th {
     min-width: 400px;
     width: 400px;
@@ -343,9 +347,8 @@ hr.divider {
     #outter-table-leaderboard tbody tr td {
         width: 370px;
     }
-
-
 }
+
 @media (max-width:1200px) {
     #outter-table-leaderboard tbody tr td {
         width: 310px;
@@ -393,11 +396,59 @@ details summary {
 
 /**** Player Page view ****/
 
+/*START player stats on top page*/
 .player-stats-container {
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
+.col-md-6{
+    display:flex;
+    padding:10px;
+    width:auto;
+}
+
+
+.player-stats-card{
+    display: flex;
+}
+
+    .player-stats-card p {
+        padding: 0 10px;
+    }
+
+.player-stats-container text-nowrap {
+    justify-content: center;
+    width: auto;
+}
+
+
+@media (max-width:1400px) {
+    .row{
+        flex-direction: column;
+    }
+    .col-md-6 {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+
+
+@media (max-width:575px) {
+    .col-md-6 {
+        padding: 0;
+    }
+    .player-stats-card{
+        margin:0;
+    }
+    .player-stats-card {
+        flex-direction: column;
+        margin-bottom: 14px
+    }
+}
+/*END player stats on top page*/
 
 
 
