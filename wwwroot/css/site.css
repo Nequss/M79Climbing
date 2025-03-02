@@ -358,7 +358,7 @@ hr.divider {
     }
 }
 
-@media (max-width:992px) {
+@media (max-width:991px) {
     #outter-table-leaderboard tbody tr td {
         width: 230px;
     }
@@ -378,6 +378,31 @@ hr.divider {
 }
 
 /*END LEADERBOARD ALIGNMENT IMPROVE IT*/
+
+/*START player stats changes*/
+#player-stat-title {
+    text-align: center;
+}
+
+#player-stats-statistics {
+    width: 100%;
+    margin: 0 50px;
+}
+
+@media (max-width:991px)
+{
+    #player-stats-statistics{
+        margin: 0 10px;
+    }
+}
+
+@media (max-width: 768px)
+{
+    #player-stats-statistics {
+        text-align: center;
+    }
+}
+/*END player stats changes*/
 
 /* Remove the default arrow in <summary> */
 details summary {
