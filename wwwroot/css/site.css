@@ -333,9 +333,8 @@ hr.divider {
         }
 
 #legend-table-leaderboard th {
-    min-width: 400px;
     width: 400px;
-    max-width: 400px;
+    border-bottom: 1px solid yellow;
 }
 
 
@@ -423,6 +422,8 @@ details summary {
     justify-content: center;
     align-items: center;
 }
+
+
 
 
 
