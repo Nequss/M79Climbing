@@ -30,15 +30,15 @@ namespace M79Climbing.Controllers
         }
 
         // Gets top X times for a given map searched by Name or IP if Name not found
-        [HttpGet("times/{playerIp}/{playerName}/{mapName}/{x}")]
-        public async Task<IActionResult> GetAllTimes(string playerIp, string playerName, string mapName, int x)
+        [HttpGet("times/{playerName}/{mapName}/{x}")]
+        public async Task<IActionResult> GetAllTimes(string playerName, string mapName, int x)
         {
             var records = await _context.Cap
-                .GroupBy(c => c.Map)
-                .Select(g => g.OrderBy(c => c.Time).FirstOrDefault())
-                .Take(x)
+                .Where(c => c.Map == mapName && c.Name == playerName) // Filter by map and user
+                .OrderBy(c => c.Time) // Order by time
+                .Take(x) // Limit results
                 .ToListAsync();
-             
+
             if (records.Count == 0)
                 return Content("No records found");
 

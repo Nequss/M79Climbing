@@ -78,8 +78,13 @@ namespace M79Climbing.Controllers
                         // Player exists, sum the new data with existing data
                         playerStats.GrenadesThrown += int.Parse(parts[3]);
                         playerStats.M79ShotsFired += int.Parse(parts[4]);
-                        
+
+                        Console.WriteLine($"Time to add: {parts[5]}");
+                        Console.WriteLine($"Players time: {playerStats.TimeSpentOnServer.TotalSeconds}");
+
                         playerStats.TimeSpentOnServer += TimeSpan.FromSeconds(int.Parse(parts[5]));
+
+                        Console.WriteLine($"Time after adding: {playerStats.TimeSpentOnServer.TotalSeconds}");
 
                         playerStats.MapFinishes += int.Parse(parts[6]);
                         playerStats.Respawns += int.Parse(parts[7]);
