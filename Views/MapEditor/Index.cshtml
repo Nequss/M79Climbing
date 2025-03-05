@@ -1,0 +1,12 @@
+﻿@{
+    ViewData["Title"] = "Map Editor";
+}
+
+<h2>Upload a Map</h2>
+
+<form asp-controller="MapEditor" asp-action="Upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" class="form-control" required />
+    <br />
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
