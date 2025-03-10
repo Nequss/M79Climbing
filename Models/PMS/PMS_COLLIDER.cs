@@ -24,13 +24,6 @@ namespace M79Climbing.Models.PMS
             this.x = br.ReadSingle();
             this.y = br.ReadSingle();
             this.radius = br.ReadSingle();
-
-            // Display the values in the console
-            Console.WriteLine("Active: " + active);
-            Console.WriteLine("Filler: " + BitConverter.ToString(filler));
-            Console.WriteLine("X: " + x);
-            Console.WriteLine("Y: " + y);
-            Console.WriteLine("Radius: " + radius);
         }
     }
 }

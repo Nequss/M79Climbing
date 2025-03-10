@@ -1,0 +1,164 @@
+﻿body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+#canvas-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+}
+
+canvas {
+    display: block;
+}
+
+#info-panel {
+    position: absolute;
+    top: 60px;
+    left: 0px;
+    background-color: #252E1C;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+    z-index: 10;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+#poly-panel {
+    position: absolute;
+    top: 138px;
+    left: 0px;
+    background-color: #252E1C;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+    z-index: 10;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+    #poly-panel h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    #poly-panel div {
+        margin-bottom: 8px;
+    }
+
+    #poly-panel label {
+        display: inline-block;
+        width: 60px;
+    }
+
+.controls {
+    position: absolute;
+    bottom: -7px;
+    left: 0px;
+    height: 60px;
+    background-color: transparent;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: sans-serif;
+    z-index: 10;
+}
+
+.color-square {
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    cursor: pointer;
+    color: #252E1C;
+}
+
+    .color-square:hover {
+        transform: scale(1.1);
+    }
+
+#triangle-type, #triangle-color {
+    background: #252E1C;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 4px;
+}
+
+    /* Webkit-based browsers (Chrome, Edge, Safari) */
+    #triangle-type::-webkit-scrollbar {
+        width: 5px; /* Width of scrollbar */
+    }
+
+    #triangle-type::-webkit-scrollbar-track {
+        background: transparent; /* Track color */
+        border-radius: 5px;
+    }
+
+    #triangle-type::-webkit-scrollbar-thumb {
+        background: transparent; /* Scroll thumb color */
+        border-radius: 5px;
+    }
+
+        #triangle-type::-webkit-scrollbar-thumb:hover {
+            background: #BBCC66; 
+        }
+
+#vertex-coordinates {
+    font-size: 0.9em;
+    color: #ddd;
+    margin-top: 5px;
+    padding-left: 65px;
+}
+
+.controls {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px;
+    background-color: #252E1C;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 100;
+}
+
+    .controls button {
+        background-color: #252E1C;
+        color: white;
+        border: 1px solid #555;
+        border-radius: 4px;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        position: relative;
+    }
+
+        .controls button:hover {
+            color: #BBCC66;
+            border-color: #BBCC66;
+        }
+
+            .controls button:hover::after {
+                content: attr(title);
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 3px 8px;
+                background-color: #333;
+                color: white;
+                font-size: 12px;
+                border-radius: 3px;
+                white-space: nowrap;
+                z-index: 101;
+                margin-top: 5px;
+            }

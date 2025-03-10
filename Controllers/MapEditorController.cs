@@ -22,6 +22,13 @@ namespace M79Climbing.Controllers
 
         public IActionResult Index()
         {
+            return RedirectToAction("Edit", new { fileName = "Demo" });
+
+            // return View();
+        }
+
+        public async Task<IActionResult> Edit(string fileName)
+        {
             return View();
         }
 
@@ -41,21 +48,35 @@ namespace M79Climbing.Controllers
             Directory.CreateDirectory(uploadsFolder); // Ensure the folder exists
 
             filePath = Path.Combine(uploadsFolder, file.FileName);
-            Console.WriteLine($"File Path: {filePath}");
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await file.CopyToAsync(stream);
+                filePath = stream.Name;
             }
 
-            return RedirectToAction("Edit");
+            return RedirectToAction("Edit", new { fileName = file.FileName });
         }
 
-        public async Task<IActionResult> Edit()
+        /*
+        public async Task<IActionResult> Edit(string fileName)
         {
-            PMS_FILE map = await _pmsFileService.ReadPMSFile(@"C:\Users\snequ\Documents\Visual Studio 2022 Projects\M79Climbing\wwwroot\uploads\m79_Rushup.pms");
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return RedirectToAction("Index", new { error = "No file selected" });
+            }
 
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", fileName);
+
+            // Check if file exists
+            if (!System.IO.File.Exists(filePath))
+            {
+                return RedirectToAction("Index", new { error = "File not found" });
+            } 
+
+            PMS_FILE map = await _pmsFileService.ReadPMSFile(filePath);
             return View(map);
         }
+        */
     }
 }

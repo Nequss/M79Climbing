@@ -1,9 +1,49 @@
-﻿@model M79Climbing.Models.PMS.PMS_FILE
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Editor</title>
+    <link rel="stylesheet" href="~/css/canvasStyles.css" asp-append-version="true">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet">
 
-@{
-    ViewData["Title"] = "Map Editor";
+</head>
+<body>
+    <div id="canvas-container">
+        <canvas id="editor-canvas"></canvas>
+    </div>
+    <div id="info-panel">
+        Cursor: (0, 0)<br>
+        Zoom: 1.0x
+    </div>
+    <div id="poly-panel" style="display: none;">
+        <h3>Properties</h3>
+        <div>
+            <label for="triangle-type">Type:</label>
+            <select id="triangle-type"></select>
+        </div>
+        <div>
+            <label for="triangle-color">Color:</label>
+            <input type="color" id="triangle-color" value="#64c8ff">
+        </div>
+        <div>
+            <label>Vertices:</label>
+            <div id="vertex-coordinates"></div>
+        </div>
+    </div>
 
-    var message = ViewData["Message"] as string;
-}
+    <div class="controls">
+        <button id="controls-btn" title="Shows all options"><span class="bi-gear-fill"></span>Settings</button>
+        <button id="clear-btn" title="Clear the grid"><span class="bi-trash"></span> Clear</button>
+        <button id="undo-btn" title="Undo last action"><span class="bi-arrow-counterclockwise"></span> Undo</button>
+        <button id="spawnpoint-btn" title="Add spawn point"><span class="bi-person-fill"></span> Spawn</button>
+        <button id="blue-flag-btn" title="Add blue flag"><span class="bi-flag-fill" style="color: #0d6efd;"></span> Blue</button>
+        <button id="red-flag-btn" title="Add red flag"><span class="bi-flag-fill" style="color: #dc3545;"></span> Red</button>
+        <button id="save-btn" title="Save current map"><span class="bi-save"></span> Save</button>
+        <button id="help-btn" title="Show help information"><span class="bi-question-circle"></span> Help</button>
+   
+    </div>
 
-<h2>Map Details</h2>
+    <script src="~/js/MapEditor/Edit/setupCanvas.js" defer></script>
+</body>
+</html>

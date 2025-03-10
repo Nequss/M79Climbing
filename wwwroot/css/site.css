@@ -450,6 +450,49 @@ details summary {
 }
 /*END player stats on top page*/
 
+/* MapEditor Index Page */
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.square-button-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.square-button {
+    width: 150px;
+    height: 150px;
+    margin: 0 30px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+    .square-button:hover {
+        background-color: #0056b3;
+    }
+
+.or-text {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 10px;
+    text-align: center;
+}
+
+/*  END of Map Editor */
 
 
 /*********** Change autocomplete styles in WebKit ************
