@@ -11,6 +11,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
+/*
+ * To do:
+ * - if ever soldat api is down, display a message to the user
+ * - no ip hardcoded
+*/
+
 namespace M79Climbing.Controllers
 {
     public class ServerInfoController : Controller
@@ -147,7 +153,7 @@ namespace M79Climbing.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var apiUrl = "https://api.soldat.pl/v0/server/34.118.30.26/23073";
+            var apiUrl = "https://api.soldat.pl/v0/server/34.118.4.116/23073";
             ServerInfoModel serverData = null;
 
             try
