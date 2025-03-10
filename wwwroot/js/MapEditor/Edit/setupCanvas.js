@@ -49,6 +49,11 @@ let vertexDragThreshold = 10;
 let vertexWasDragged = false;
 let selectedTriangle = null;
 let isMovingTriangle = false;
+let spawnPoint = null;     // Single spawn point
+let redFlag = null;        // Single red flag
+let blueFlag = null;       // Single blue flag
+let currentMode = "triangle"; // Default mode
+const iconSize = 20;       // Size in pixels when drawn at zoom level 1
 
 // View transformation
 let offset = { x: 0, y: 0 }; // Pan offset
@@ -281,9 +286,15 @@ function drawAll() {
     // Draw current in-progress triangle
     drawCurrentPoints();
 
+    // Draw single special objects
+    drawSpawnPoint();
+    if (redFlag) drawFlag(redFlag, "#dc3545");
+    if (blueFlag) drawFlag(blueFlag, "#0d6efd");
+
     // Update poly panel if a triangle is selected
     updatePolyPanel();
 }
+
 
 // Check if a point is inside a triangle
 function isPointInTriangle(px, py, triangle) {
@@ -395,9 +406,58 @@ function deselectTriangle() {
     drawAll();
 }
 
+// Fixed spawn point drawing function
+function drawSpawnPoint() {
+    if (!spawnPoint) return;
+
+    const screenPos = worldToScreen(spawnPoint.x, spawnPoint.y);
+    const radius = 15 * zoomLevel;
+
+    // Draw outer circle
+    ctx.beginPath();
+    ctx.arc(screenPos.x, screenPos.y, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgba(40, 167, 69, 0.6)';
+    ctx.fill();
+    ctx.strokeStyle = '#28a745';
+    ctx.lineWidth = zoomLevel;
+    ctx.stroke();
+
+    // Draw inner circle
+    ctx.beginPath();
+    ctx.arc(screenPos.x, screenPos.y, radius * 0.6, 0, 2 * Math.PI);
+    ctx.fillStyle = '#28a745';
+    ctx.fill();
+}
+
+function drawFlag(point, color) {
+    if (!point) return;
+
+    const screenPos = worldToScreen(point.x, point.y);
+    const size = iconSize * zoomLevel;
+
+    // Flag pole
+    ctx.strokeStyle = '#000';
+    ctx.lineWidth = 2 * zoomLevel;
+    ctx.beginPath();
+    ctx.moveTo(screenPos.x, screenPos.y - size);
+    ctx.lineTo(screenPos.x, screenPos.y + size / 2);
+    ctx.stroke();
+
+    // Flag
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(screenPos.x, screenPos.y - size);
+    ctx.lineTo(screenPos.x + size, screenPos.y - size / 2);
+    ctx.lineTo(screenPos.x, screenPos.y);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+}
+
+
 // Event handlers
 canvas.addEventListener('click', (e) => {
-    // Don't add a new point if we were just dragging a vertex or triangle
+    // Don't add a new point if we were just dragging
     if (vertexWasDragged) {
         vertexWasDragged = false;
         return;
@@ -407,6 +467,27 @@ canvas.addEventListener('click', (e) => {
     if (isDragging) return;
 
     const worldPos = screenToWorld(e.clientX, e.clientY);
+
+    // Handle special placement modes
+    if (currentMode === "spawn") {
+        spawnPoint = worldPos;  // Replace existing spawn point
+        currentMode = "triangle";
+        canvas.style.cursor = "default";
+        drawAll();
+        return;
+    } else if (currentMode === "redFlag") {
+        redFlag = worldPos;  // Replace existing red flag
+        currentMode = "triangle";
+        canvas.style.cursor = "default";
+        drawAll();
+        return;
+    } else if (currentMode === "blueFlag") {
+        blueFlag = worldPos;  // Replace existing blue flag
+        currentMode = "triangle";
+        canvas.style.cursor = "default";
+        drawAll();
+        return;
+    }
 
     // Check if we clicked on an existing triangle
     const triangleResult = findTriangleUnderCursor(e.clientX, e.clientY);
@@ -538,8 +619,23 @@ canvas.addEventListener('mouseup', () => {
 });
 
 canvas.addEventListener('contextmenu', (e) => {
-    // Prevent the default context menu from appearing
     e.preventDefault();
+
+    const worldPos = screenToWorld(e.clientX, e.clientY);
+    const deleteRadius = 20 / zoomLevel;
+
+    // Check for special objects to delete
+    if (spawnPoint) {
+        const dx = spawnPoint.x - worldPos.x;
+        const dy = spawnPoint.y - worldPos.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < deleteRadius) {
+            spawnPoint = null;
+            drawAll();
+            return;
+        }
+    }
 
     // Find which triangle was clicked
     const triangleResult = findTriangleUnderCursor(e.clientX, e.clientY);
@@ -589,6 +685,9 @@ canvas.addEventListener('wheel', (e) => {
 clearBtn.addEventListener('click', () => {
     triangles = [];
     currentPoints = [];
+    spawnPoint = null;
+    redFlag = null;
+    blueFlag = null;
     deselectTriangle();
     drawAll();
 });
@@ -597,15 +696,34 @@ clearBtn.addEventListener('click', () => {
 undoBtn.addEventListener('click', () => {
     if (currentPoints.length > 0) {
         currentPoints.pop();
+    } else if (blueFlag) {
+        blueFlag = null;
+    } else if (redFlag) {
+        redFlag = null;
+    } else if (spawnPoint) {
+        spawnPoint = null;
     } else if (triangles.length > 0) {
         triangles.pop();
-
-        // If we deleted the selected triangle, deselect it
         if (selectedTriangle === triangles.length) {
             deselectTriangle();
         }
     }
     drawAll();
+});
+
+document.getElementById('spawnpoint-btn').addEventListener('click', () => {
+    currentMode = "spawn";
+    canvas.style.cursor = "crosshair";
+});
+
+document.getElementById('red-flag-btn').addEventListener('click', () => {
+    currentMode = "redFlag";
+    canvas.style.cursor = "crosshair";
+});
+
+document.getElementById('blue-flag-btn').addEventListener('click', () => {
+    currentMode = "blueFlag";
+    canvas.style.cursor = "crosshair";
 });
 
 // Initialize the application
