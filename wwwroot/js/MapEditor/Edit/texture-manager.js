@@ -135,34 +135,22 @@ class TextureManager {
         }
     }
 
-    // In texture-manager.js, enhance updateControlsFromTriangle method:
     updateControlsFromTriangle(triangle) {
         if (!triangle.texture) return;
 
-        console.log("Updating controls from triangle:", triangle);
-
-        // Get the average of the three vertices for each property
-        const avgTU = (triangle.points[0].TU + triangle.points[1].TU + triangle.points[2].TU) / 3;
-        const avgTV = (triangle.points[0].TV + triangle.points[1].TV + triangle.points[2].TV) / 3;
-        const avgRHW = triangle.points[0].RHW || 1.0; // Use RHW from first point or default to 1.0
-
-        console.log("Average values:", { TU: avgTU, TV: avgTV, RHW: avgRHW });
-
-        // Explicitly set values to the sliders
-        this.positionXSlider.value = avgTU.toString();
-        this.positionYSlider.value = avgTV.toString();
+        // Set UI controls based on stored transformation values
+        this.positionXSlider.value = (triangle.texture.positionX || 0).toString();
+        this.positionYSlider.value = (triangle.texture.positionY || 0).toString();
         this.rotationSlider.value = (triangle.texture.rotation || 0).toString();
-        this.scaleSlider.value = avgRHW.toString();
+        this.scaleSlider.value = (triangle.texture.scale || 1.0).toString();
 
-        // Explicitly update displayed values
+        // Update display
         this.updateControlDisplayValues();
     }
 
-
-
     updateControlDisplayValues() {
-        this.positionXValue.textContent = parseFloat(this.positionXSlider.value).toFixed(2);
-        this.positionYValue.textContent = parseFloat(this.positionYSlider.value).toFixed(2);
+        this.positionXValue.textContent = parseFloat(this.positionXSlider.value).toFixed(3);
+        this.positionYValue.textContent = parseFloat(this.positionYSlider.value).toFixed(3);
         this.rotationValue.textContent = `${this.rotationSlider.value}°`;
         this.scaleValue.textContent = parseFloat(this.scaleSlider.value).toFixed(1);
     }
@@ -222,6 +210,21 @@ class TextureManager {
             // Default RHW value (scaling)
             point.RHW = 1.0;
         });
+
+        // Reset all transformation properties
+        if (triangle.texture) {
+            // Store original coordinates for reference
+            triangle.texture.originalCoords = [
+                { TU: 0, TV: 0 },
+                { TU: 1, TV: 0 },
+                { TU: 0.5, TV: 1 }
+            ];
+
+            triangle.texture.rotation = 0;
+            triangle.texture.scale = 1.0;
+            triangle.texture.positionX = 0;
+            triangle.texture.positionY = 0;
+        }
     }
 
     resetTextureControls() {
@@ -232,28 +235,36 @@ class TextureManager {
         this.updateControlDisplayValues();
     }
 
-    // In texture-manager.js
-    // Enhance the updateTexturePosition method
-
-    updateTexturePosition(dx, dy) {
+    updateTexturePosition(newX, newY) {
         if (!this.selectedTriangle || !this.selectedTriangle.texture) return;
 
-        // Directly set absolute position instead of adding delta
-        const avgTU = parseFloat(this.positionXSlider.value);
-        const avgTV = parseFloat(this.positionYSlider.value);
+        // Store previous position values
+        const prevX = this.selectedTriangle.texture.positionX || 0;
+        const prevY = this.selectedTriangle.texture.positionY || 0;
 
-        // Calculate current average
-        const currentAvgTU = (this.selectedTriangle.points[0].TU +
-            this.selectedTriangle.points[1].TU +
-            this.selectedTriangle.points[2].TU) / 3;
-        const currentAvgTV = (this.selectedTriangle.points[0].TV +
-            this.selectedTriangle.points[1].TV +
-            this.selectedTriangle.points[2].TV) / 3;
+        // Calculate deltas (how much the position changed)
+        const deltaX = newX !== null ? parseFloat(newX) - prevX : 0;
+        const deltaY = newY !== null ? parseFloat(newY) - prevY : 0;
 
-        // Apply the difference to each point
+        // Update stored position values
+        if (newX !== null) this.selectedTriangle.texture.positionX = parseFloat(newX);
+        if (newY !== null) this.selectedTriangle.texture.positionY = parseFloat(newY);
+
+        // Get current rotation in radians
+        const angle = (this.selectedTriangle.texture.rotation || 0) * Math.PI / 180;
+
+        // Calculate rotated deltas to account for texture rotation
+        const cosAngle = Math.cos(angle);
+        const sinAngle = Math.sin(angle);
+
+        // Apply rotation to the movement delta (in the opposite direction)
+        const rotatedDeltaU = deltaX * cosAngle + deltaY * sinAngle;
+        const rotatedDeltaV = -deltaX * sinAngle + deltaY * cosAngle;
+
+        // Apply the rotated deltas to all vertices
         this.selectedTriangle.points.forEach(point => {
-            point.TU += (avgTU - currentAvgTU);
-            point.TV += (avgTV - currentAvgTV);
+            point.TU -= rotatedDeltaU;
+            point.TV -= rotatedDeltaV;
         });
 
         // Redraw
@@ -267,31 +278,74 @@ class TextureManager {
         // Store the rotation angle
         this.selectedTriangle.texture.rotation = angle;
 
-        // Calculate the center of the triangle in texture space
-        const centerTU = (this.selectedTriangle.points[0].TU +
-            this.selectedTriangle.points[1].TU +
-            this.selectedTriangle.points[2].TU) / 3;
-        const centerTV = (this.selectedTriangle.points[0].TV +
-            this.selectedTriangle.points[1].TV +
-            this.selectedTriangle.points[2].TV) / 3;
+        // Apply transformations from original coordinates
+        this.applyAllTextureTransformations();
 
-        // Convert angle to radians
-        const radians = angle * Math.PI / 180;
-
-        // Rotate each point around the center
-        this.selectedTriangle.points.forEach(point => {
-            // Translate to origin
-            const tu = point.TU - centerTU;
-            const tv = point.TV - centerTV;
-
-            // Rotate
-            point.TU = centerTU + (tu * Math.cos(radians) - tv * Math.sin(radians));
-            point.TV = centerTV + (tu * Math.sin(radians) + tv * Math.cos(radians));
-        });
-
-        // Redraw the triangle
+        // Redraw
         drawAll();
     }
+
+    updateTextureScale(scale) {
+        if (!this.selectedTriangle || !this.selectedTriangle.texture) return;
+
+        // Store scale in texture object
+        this.selectedTriangle.texture.scale = scale;
+
+        // Apply transformations from original coordinates
+        this.applyAllTextureTransformations();
+
+        // Redraw
+        drawAll();
+    }
+
+    // New function to apply all transformations consistently
+    applyAllTextureTransformations() {
+        const triangle = this.selectedTriangle;
+        const texture = triangle.texture;
+
+        // Get transformation values
+        const posX = texture.positionX || 0;
+        const posY = texture.positionY || 0;
+        const rotation = (texture.rotation || 0) * Math.PI / 180;
+        const scale = texture.scale || 1.0;
+
+        // Get original coordinates
+        const originalCoords = texture.originalCoords || [
+            { TU: 0, TV: 0 },
+            { TU: 1, TV: 0 },
+            { TU: 0.5, TV: 1 }
+        ];
+
+        // Center point of the texture coordinates
+        const centerTU = 0.5;
+        const centerTV = 1 / 3;
+
+        // Apply all transformations in order: scale → rotate → translate
+        triangle.points.forEach((point, index) => {
+            const origTU = originalCoords[index].TU;
+            const origTV = originalCoords[index].TV;
+
+            // Scale from center
+            const scaledTU = centerTU + (origTU - centerTU) / scale;
+            const scaledTV = centerTV + (origTV - centerTV) / scale;
+
+            // Rotate around center
+            const cosAngle = Math.cos(rotation);
+            const sinAngle = Math.sin(rotation);
+
+            const rotatedTU = centerTU + (scaledTU - centerTU) * cosAngle - (scaledTV - centerTV) * sinAngle;
+            const rotatedTV = centerTV + (scaledTU - centerTU) * sinAngle + (scaledTV - centerTV) * cosAngle;
+
+            // Translate
+            point.TU = rotatedTU - posX;
+            point.TV = rotatedTV - posY;
+
+            // Apply scale to RHW
+            point.RHW = scale;
+        });
+    }
+
+
 
     updateTextureScale(scale) {
         if (!this.selectedTriangle || !this.selectedTriangle.texture) return;
@@ -301,30 +355,30 @@ class TextureManager {
             point.RHW = scale;
         });
 
-        // Calculate the center of the triangle in texture space
-        const centerTU = (this.selectedTriangle.points[0].TU +
-            this.selectedTriangle.points[1].TU +
-            this.selectedTriangle.points[2].TU) / 3;
-        const centerTV = (this.selectedTriangle.points[0].TV +
-            this.selectedTriangle.points[1].TV +
-            this.selectedTriangle.points[2].TV) / 3;
+        // Store scale in texture object
+        this.selectedTriangle.texture.scale = scale;
 
-        // Scale each point from the center
+        // Calculate texture center from the actual texture coordinates
+        const textureCenterTU = (this.selectedTriangle.points[0].TU + this.selectedTriangle.points[1].TU + this.selectedTriangle.points[2].TU) / 3;
+        const textureCenterTV = (this.selectedTriangle.points[0].TV + this.selectedTriangle.points[1].TV + this.selectedTriangle.points[2].TV) / 3;
+
+        // Scale each point from the calculated texture center
+        const oldScale = this.selectedTriangle.texture.oldScale || 1.0;
+        const relativeScale = scale / oldScale;
+
         this.selectedTriangle.points.forEach(point => {
-            // Translate to origin
-            const tu = point.TU - centerTU;
-            const tv = point.TV - centerTV;
-
-            // Scale relative to current scale
-            const currentScale = point.RHW || 1.0;
-            const scaleFactor = scale / currentScale;
-            point.TU = centerTU + tu * scaleFactor;
-            point.TV = centerTV + tv * scaleFactor;
+            // Scale coordinates relative to calculated texture center
+            point.TU = textureCenterTU + ((point.TU - textureCenterTU) * relativeScale);
+            point.TV = textureCenterTV + ((point.TV - textureCenterTV) * relativeScale);
         });
 
-        // Redraw the triangle
+        // Remember current scale for next relative scale calculation
+        this.selectedTriangle.texture.oldScale = scale;
+
+        // Redraw
         drawAll();
     }
+
 
     removeTextureFromTriangle() {
         if (!this.selectedTriangle) return;
@@ -346,7 +400,127 @@ class TextureManager {
         drawAll();
     }
 
+    applyAllTextureTransformations() {
+        const triangle = this.selectedTriangle;
+        const texture = triangle.texture;
+
+        // Get transformation values
+        const posX = texture.positionX || 0;
+        const posY = texture.positionY || 0;
+        const rotation = (texture.rotation || 0) * Math.PI / 180;
+        const scale = texture.scale || 1.0;
+
+        // Get original coordinates
+        const originalCoords = texture.originalCoords || [
+            { TU: 0, TV: 0 },
+            { TU: 1, TV: 0 },
+            { TU: 0.5, TV: 1 }
+        ];
+
+        // Center point of the texture coordinates
+        const centerTU = 0.5;
+        const centerTV = 1 / 3;
+
+        // Apply all transformations in order: scale → rotate → translate
+        triangle.points.forEach((point, index) => {
+            const origTU = originalCoords[index].TU;
+            const origTV = originalCoords[index].TV;
+
+            // Scale from center
+            const scaledTU = centerTU + (origTU - centerTU) / scale;
+            const scaledTV = centerTV + (origTV - centerTV) / scale;
+
+            // Rotate around center
+            const cosAngle = Math.cos(rotation);
+            const sinAngle = Math.sin(rotation);
+
+            const rotatedTU = centerTU + (scaledTU - centerTU) * cosAngle - (scaledTV - centerTV) * sinAngle;
+            const rotatedTV = centerTV + (scaledTU - centerTU) * sinAngle + (scaledTV - centerTV) * cosAngle;
+
+            // Translate
+            point.TU = rotatedTU - posX;
+            point.TV = rotatedTV - posY;
+
+            // Apply scale to RHW
+            point.RHW = scale;
+        });
+    }
+
     setupEventListeners() {
+        // Initialize textbox with the slider's max value
+        this.scaleValue.value = parseFloat(this.scaleSlider.max).toFixed(1);
+
+        // Position X text input
+        this.positionXValue.addEventListener('change', (e) => {
+            let newValue = parseFloat(e.target.value);
+            if (isNaN(newValue)) {
+                newValue = 0;
+                this.positionXValue.value = "0.00";
+            }
+
+            // Clamp to allowed range
+            newValue = Math.max(-1, Math.min(1, newValue));
+            this.positionXValue.value = newValue.toFixed(2);
+
+            // Update slider and apply change
+            this.positionXSlider.value = newValue;
+            this.updateTexturePosition(newValue, null);
+        });
+
+        // Position Y text input
+        this.positionYValue.addEventListener('change', (e) => {
+            let newValue = parseFloat(e.target.value);
+            if (isNaN(newValue)) {
+                newValue = 0;
+                this.positionYValue.value = "0.00";
+            }
+
+            // Clamp to allowed range
+            newValue = Math.max(-1, Math.min(1, newValue));
+            this.positionYValue.value = newValue.toFixed(2);
+
+            // Update slider and apply change
+            this.positionYSlider.value = newValue;
+            this.updateTexturePosition(null, newValue);
+        });
+
+        // Rotation text input
+        this.rotationValue.addEventListener('change', (e) => {
+            let newValue = parseFloat(e.target.value);
+            if (isNaN(newValue)) {
+                newValue = 0;
+                this.rotationValue.value = "0";
+            }
+
+            // Clamp and normalize to 0-360 range
+            newValue = newValue % 360;
+            if (newValue < 0) newValue += 360;
+            this.rotationValue.value = newValue.toFixed(0);
+
+            // Update slider and apply change
+            this.rotationSlider.value = newValue;
+            this.updateTextureRotation(newValue);
+        });
+
+        this.scaleSlider.addEventListener('input', (e) => {
+            const newValue = parseFloat(e.target.value);
+            this.scaleValue.textContent = newValue.toFixed(1);
+
+            if (this.selectedTriangle && this.selectedTriangle.texture) {
+                this.updateTextureScale(newValue);
+            }
+        });
+
+        // Existing event listeners
+        this.positionXSlider.addEventListener('input', (e) => {
+            const newValue = parseFloat(e.target.value);
+            this.positionXValue.textContent = newValue.toFixed(3);
+
+            if (this.selectedTriangle && this.selectedTriangle.texture) {
+                this.updateTexturePosition(newValue, null);
+            }
+        });
+
         // Search functionality
         if (this.textureSearch) {
             this.textureSearch.addEventListener('input', () => {
@@ -357,25 +531,19 @@ class TextureManager {
         // Slider controls
         this.positionXSlider.addEventListener('input', (e) => {
             const newValue = parseFloat(e.target.value);
-            this.positionXValue.textContent = newValue.toFixed(2);
+            this.positionXValue.textContent = newValue.toFixed(3);
 
             if (this.selectedTriangle && this.selectedTriangle.texture) {
-                const currentAvg = (this.selectedTriangle.points[0].TU +
-                    this.selectedTriangle.points[1].TU +
-                    this.selectedTriangle.points[2].TU) / 3;
-                this.updateTexturePosition(newValue - currentAvg, 0);
+                this.updateTexturePosition(newValue, null);
             }
         });
 
         this.positionYSlider.addEventListener('input', (e) => {
             const newValue = parseFloat(e.target.value);
-            this.positionYValue.textContent = newValue.toFixed(2);
+            this.positionYValue.textContent = newValue.toFixed(3);
 
             if (this.selectedTriangle && this.selectedTriangle.texture) {
-                const currentAvg = (this.selectedTriangle.points[0].TV +
-                    this.selectedTriangle.points[1].TV +
-                    this.selectedTriangle.points[2].TV) / 3;
-                this.updateTexturePosition(0, newValue - currentAvg);
+                this.updateTexturePosition(null, newValue);
             }
         });
 
@@ -385,15 +553,6 @@ class TextureManager {
 
             if (this.selectedTriangle && this.selectedTriangle.texture) {
                 this.updateTextureRotation(newValue);
-            }
-        });
-
-        this.scaleSlider.addEventListener('input', (e) => {
-            const newValue = parseFloat(e.target.value);
-            this.scaleValue.textContent = newValue.toFixed(1);
-
-            if (this.selectedTriangle && this.selectedTriangle.texture) {
-                this.updateTextureScale(newValue);
             }
         });
 
@@ -438,76 +597,119 @@ function drawTexturedTriangle(triangle, triangleIndex) {
         return false;
     }
 
-    const screenPoints = triangle.points.map(p => worldToScreen(p.x, p.y));
-
-    // Get or create the texture image
     let img;
     const texturePath = triangle.texture.path;
 
-    if (textureCache[texturePath]) {
+    if (textureCache[texturePath] && textureCache[texturePath].complete) {
         img = textureCache[texturePath];
 
-        // If image is loaded, draw with texture
-        if (img.complete) {
-            try {
-                // Draw triangle outline
-                ctx.beginPath();
-                ctx.moveTo(screenPoints[0].x, screenPoints[0].y);
-                ctx.lineTo(screenPoints[1].x, screenPoints[1].y);
-                ctx.lineTo(screenPoints[2].x, screenPoints[2].y);
-                ctx.closePath();
+        try {
+            // Get triangle vertices in world coordinates
+            const worldPoints = triangle.points;
 
-                // Fill with colored background first
-                const isSelected = (triangleIndex === selectedTriangle);
-                ctx.fillStyle = triangle.color || '#64c8ff';
-                ctx.fill();
+            // Convert to screen coordinates for drawing
+            const screenPoints = worldPoints.map(p => worldToScreen(p.x, p.y));
 
-                // Then try to add texture
-                ctx.save();
-                ctx.clip(); // Clip to the triangle shape
+            // Draw base triangle with semi-transparent color
+            ctx.beginPath();
+            ctx.moveTo(screenPoints[0].x, screenPoints[0].y);
+            ctx.lineTo(screenPoints[1].x, screenPoints[1].y);
+            ctx.lineTo(screenPoints[2].x, screenPoints[2].y);
+            ctx.closePath();
 
-                // Simple pattern approach first
-                try {
-                    const pattern = ctx.createPattern(img, 'repeat');
-                    ctx.fillStyle = pattern;
-                    ctx.globalAlpha = 0.8; // Make texture slightly transparent
-                    ctx.fill();
-                } catch (e) {
-                    console.error("Pattern creation failed:", e);
-                }
+            const isSelected = (triangleIndex === selectedTriangle);
+            const baseColor = triangle.color || '#64c8ff';
 
-                ctx.restore();
-
-                // Draw the outline
-                ctx.strokeStyle = isSelected ? '#FFCC00' : triangle.color || '#64c8ff';
-                ctx.lineWidth = isSelected ? 3 : 2;
-                ctx.stroke();
-
-                // Draw vertices
-                screenPoints.forEach((p, i) => {
-                    const isVertexSelected = (triangleIndex === selectedTriangleIndex && i === selectedVertexIndex);
-                    ctx.fillStyle = isVertexSelected ? 'yellow' :
-                        (i === 0 ? 'red' : (i === 1 ? 'green' : 'blue'));
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, isVertexSelected ? 6 : 4, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-
-                return true;
-            } catch (e) {
-                console.error("Error drawing textured triangle:", e);
-                return false;
+            // Make the base color more transparent when textured
+            const baseAlpha = 0.3;
+            const rgbMatch = baseColor.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i);
+            if (rgbMatch) {
+                const r = parseInt(rgbMatch[1], 16);
+                const g = parseInt(rgbMatch[2], 16);
+                const b = parseInt(rgbMatch[3], 16);
+                ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${baseAlpha})`;
+            } else {
+                ctx.fillStyle = baseColor;
             }
+            ctx.fill();
+
+            // Now apply texture
+            ctx.save();
+
+            // Clip to the triangle shape
+            ctx.beginPath();
+            ctx.moveTo(screenPoints[0].x, screenPoints[0].y);
+            ctx.lineTo(screenPoints[1].x, screenPoints[1].y);
+            ctx.lineTo(screenPoints[2].x, screenPoints[2].y);
+            ctx.closePath();
+            ctx.clip();
+
+            // Get texture parameters
+            const rotation = triangle.texture.rotation || 0;
+            const scale = Math.max(triangle.points[0].RHW || 1.0, 0.1); // Prevent zero scale
+
+            // Calculate center of triangle in world space
+            const centerWorldX = (worldPoints[0].x + worldPoints[1].x + worldPoints[2].x) / 3;
+            const centerWorldY = (worldPoints[0].y + worldPoints[1].y + worldPoints[2].y) / 3;
+
+            // Convert to screen space
+            const centerScreen = worldToScreen(centerWorldX, centerWorldY);
+
+            // Calculate average texture coordinates
+            const avgTU = ((worldPoints[0].TU || 0) + (worldPoints[1].TU || 0) + (worldPoints[2].TU || 0)) / 3;
+            const avgTV = ((worldPoints[0].TV || 0) + (worldPoints[1].TV || 0) + (worldPoints[2].TV || 0)) / 3;
+
+            // Apply transformations for texture rendering
+            ctx.translate(centerScreen.x, centerScreen.y);
+            ctx.rotate(rotation * Math.PI / 180);
+
+            // Scale by zoom level to keep texture fixed in world space
+            ctx.scale(scale * zoomLevel, scale * zoomLevel);
+
+            // Position texture based on TU/TV coordinates
+            const offsetX = -avgTU * img.width;
+            const offsetY = -avgTV * img.height;
+
+            // Draw the image
+            ctx.globalAlpha = 0.9;
+            ctx.drawImage(img, offsetX, offsetY);
+
+            ctx.restore();
+
+            // Draw triangle outline and vertices as normal
+            ctx.strokeStyle = isSelected ? '#FFCC00' : baseColor;
+            ctx.lineWidth = isSelected ? 3 : 2;
+            ctx.beginPath();
+            ctx.moveTo(screenPoints[0].x, screenPoints[0].y);
+            ctx.lineTo(screenPoints[1].x, screenPoints[1].y);
+            ctx.lineTo(screenPoints[2].x, screenPoints[2].y);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Draw vertices
+            screenPoints.forEach((p, i) => {
+                const isVertexSelected = (triangleIndex === selectedTriangleIndex && i === selectedVertexIndex);
+                ctx.fillStyle = isVertexSelected ? 'yellow' :
+                    (i === 0 ? 'red' : (i === 1 ? 'green' : 'blue'));
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, isVertexSelected ? 6 : 4, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            return true;
+        } catch (e) {
+            console.error("Error drawing textured triangle:", e);
+            return false;
         }
     } else {
-        // Create and cache the image
+        // Create and cache the image if not loaded yet
         img = new Image();
         textureCache[texturePath] = img;
         img.src = texturePath;
 
         img.onload = () => {
             console.log("Texture loaded successfully:", texturePath);
-            drawAll(); // Redraw when texture loads
+            drawAll();
         };
 
         img.onerror = (e) => {
@@ -515,9 +717,9 @@ function drawTexturedTriangle(triangle, triangleIndex) {
         };
     }
 
-    // If we can't draw with texture yet, return false to let regular triangle drawing happen
     return false;
 }
+
 
 
 // Replace the existing function override with this

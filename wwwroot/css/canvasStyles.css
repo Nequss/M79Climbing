@@ -136,7 +136,7 @@ canvas {
     color: #fff;
     border: 1px solid #555;
     padding: 4px;
-    width: 75%;
+    width: 100%;
 }
 
     #triangle-type::-webkit-scrollbar,
@@ -289,3 +289,4 @@ canvas {
         background-color: #8a3636;
         color: white;
     }
+
