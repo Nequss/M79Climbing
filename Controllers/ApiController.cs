@@ -16,11 +16,16 @@ namespace M79Climbing.Controllers
     {
         private readonly M79ClimbingContext _context;
         private readonly HighscoreService _highscoreService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ApiController(M79ClimbingContext context, HighscoreService highscoreService)
+        public ApiController( 
+            M79ClimbingContext context,
+            HighscoreService highscoreService,
+            IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _highscoreService = highscoreService;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet("index")]
@@ -116,6 +121,42 @@ namespace M79Climbing.Controllers
             return Json(result);
         }
 
+        [HttpGet("textures")]
+        public IActionResult Get()
+        {
+            try
+            {
+                string texturesPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", "textures");
+
+                if (!Directory.Exists(texturesPath))
+                {
+                    return NotFound(new { message = "Textures directory not found" });
+                }
+
+                var textureFiles = Directory.GetFiles(texturesPath)
+                    .Where(file => IsImageFile(file))
+                    .Select(file => new
+                    {
+                        id = Path.GetFileNameWithoutExtension(file).GetHashCode(),
+                        name = Path.GetFileNameWithoutExtension(file),
+                        path = $"/images/textures/{Path.GetFileName(file)}"
+                    })
+                    .ToList();
+
+                return Ok(textureFiles);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
+
+        private bool IsImageFile(string filePath)
+        {
+            string extension = Path.GetExtension(filePath).ToLowerInvariant();
+            return extension == ".jpg" || extension == ".jpeg" || extension == ".png" ||
+                   extension == ".gif" || extension == ".bmp" || extension == ".webp";
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

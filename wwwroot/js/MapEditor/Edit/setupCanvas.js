@@ -1,5 +1,5 @@
 ﻿// Canvas setup
-const canvas = document.getElementById('editor-canvas');
+const canvas = document.getElementById('canvas-editor');
 const ctx = canvas.getContext('2d');
 const infoPanel = document.getElementById('info-panel');
 const polyPanel = document.getElementById('poly-panel');
@@ -693,10 +693,21 @@ canvas.addEventListener('mousemove', (e) => {
             const dx = (e.clientX - lastMousePos.x) / zoomLevel;
             const dy = (e.clientY - lastMousePos.y) / zoomLevel;
 
+            // Store original texture coordinates if the triangle has a texture
+            const triangle = triangles[selectedTriangle];
+            const originalTU = triangle.points.map(p => p.TU);
+            const originalTV = triangle.points.map(p => p.TV);
+
             // Move all three vertices of the triangle
             for (let i = 0; i < 3; i++) {
-                triangles[selectedTriangle].points[i].x += dx;
-                triangles[selectedTriangle].points[i].y += dy;
+                triangle.points[i].x += dx;
+                triangle.points[i].y += dy;
+
+                // Restore original texture coordinates if they exist
+                if (triangle.texture && originalTU[i] !== undefined) {
+                    triangle.points[i].TU = originalTU[i];
+                    triangle.points[i].TV = originalTV[i];
+                }
             }
 
             // Apply snapping if Shift is pressed
