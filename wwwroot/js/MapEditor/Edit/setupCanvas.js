@@ -11,6 +11,7 @@ const vertexCoordinates = document.getElementById('vertex-coordinates');
 const spawnPointBtn = document.getElementById('spawnpoint-btn');
 const redFlagBtn = document.getElementById('red-flag-btn');
 const blueFlagBtn = document.getElementById('blue-flag-btn');
+const fullscreenBtn = document.getElementById('fullscreen-btn');
 
 document.getElementById('red-flag-btn').addEventListener('click', () => {
     currentMode = "redFlag";
@@ -991,6 +992,17 @@ redFlagBtn.addEventListener('click', () => {
 blueFlagBtn.addEventListener('click', () => {
     currentMode = "blueFlag";
 });
+
+fullscreenBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        fullscreenBtn.querySelector('span').classList.replace('bi-fullscreen', 'bi-fullscreen-exit');
+    } else {
+        document.exitFullscreen();
+        fullscreenBtn.querySelector('span').classList.replace('bi-fullscreen-exit', 'bi-fullscreen');
+    }
+});
+
 
 // Initialize the application
 function init() {

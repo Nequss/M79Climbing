@@ -21,7 +21,7 @@ canvas {
 #info-panel {
     position: absolute;
     top: 60px;
-    left: 0px;
+    left: 20px;
     background-color: #252E1C;
     color: white;
     padding: 10px;
@@ -34,7 +34,7 @@ canvas {
 #poly-panel {
     position: fixed;
     top: 138px;
-    left: 0px;
+    left: 20px;
     background-color: #252E1C;
     color: white;
     padding: 10px;
