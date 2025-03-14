@@ -290,3 +290,108 @@ canvas {
         color: white;
     }
 
+/* Settings Panel Styles */
+#settings-panel {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background-color: #252E1C;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    font-family: monospace;
+    z-index: 10;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    max-height: 80vh;
+    overflow-y: auto;
+    width: 400px;
+}
+
+    #settings-panel h3 {
+        margin-top: 0;
+        margin-bottom: 16px;
+    }
+
+    #settings-panel > div {
+        margin-bottom: 16px;
+        padding-bottom: 4px;
+    }
+
+        #settings-panel > div:not(:last-child) {
+            border-bottom: 1px dotted #555;
+            padding-bottom: 16px;
+        }
+
+    #settings-panel label {
+        display: inline-block;
+        width: 100%;
+    }
+
+    #settings-panel input[type="text"],
+    #settings-panel select {
+        background: #252E1C;
+        color: #fff;
+        border: 1px solid #555;
+        padding: 4px;
+        width: 100%;
+    }
+
+.bg-color-controls {
+    margin-top: 10px;
+}
+
+    .bg-color-controls .control-group {
+        margin-bottom: 8px;
+    }
+
+input[type="color"] {
+    width: 80px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.rgba-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-left: 30px;
+    width: 60%;
+}
+
+    .rgba-inputs span {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    /* Custom styling for RGBA number inputs */
+    .rgba-inputs input[type="number"] {
+        background-color: #252E1C;
+        color: white;
+        border: 1px solid #555;
+        border-radius: 4px;
+        text-align: center;
+        transition: all 0.2s ease;
+        height: 24px;
+        width: 50px;
+    }
+        .rgba-inputs input[type="number"]:focus {
+            background-color: #252E1C;
+            color: white;
+            outline: none;
+            border-color: #BBCC66;
+            box-shadow: 0 0 5px rgba(138, 54, 54, 0.5);
+        }
+
+        /* Hide default spinners first */
+        .rgba-inputs input[type="number"]::-webkit-inner-spin-button,
+        .rgba-inputs input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }

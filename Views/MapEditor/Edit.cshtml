@@ -6,6 +6,15 @@
     <title>Map Editor</title>
     <link rel="stylesheet" href="~/css/canvasStyles.css" asp-append-version="true">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+    input[type="number"] { 
+        scrollbar-width: none; 
+        -ms-overflow-style: none;
+    }
+    input[type="number"]::-webkit-scrollbar { 
+        display: none; 
+    }
+</style>
 
 </head>
 <body>
@@ -27,7 +36,7 @@
             <input type="color" id="triangle-color" value="#64c8ff">
         </div>
 
-        <div id="texture-container" style="display: ;">
+        <div id="texture-container" style="display: block;">
             <div class="search-container">
                 <input type="text" id="texture-search" placeholder="Search textures...">
             </div>
@@ -68,19 +77,75 @@
         </div>
     </div>
 
+    <div id="settings-panel" style="display: none;">
+        <h3>Map Settings</h3>
+
+        <div>
+            <label for="map-name">Name:</label>
+            <input type="text" id="map-name" value="New Map">
+        </div>
+
+        <div>
+            <label>Background Color:</label>
+            <div class="bg-color-controls">
+                <div class="control-group">
+                    <label for="bg-color-top">Top:</label>
+                    <input type="color" id="bg-color-top" value="#000000">
+                    <div class="rgba-inputs">
+                        <span>R:<input type="number" id="bg-top-red" min="0" max="255" value="0"></span>
+                        <span>G:<input type="number" id="bg-top-green" min="0" max="255" value="0"></span>
+                        <span>B:<input type="number" id="bg-top-blue" min="0" max="255" value="0"></span>
+                        <span>A:<input type="number" id="bg-top-alpha" min="0" max="255" value="255"></span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="bg-color-bottom">Bottom:</label>
+                    <input type="color" id="bg-color-bottom" value="#000000">
+                    <div class="rgba-inputs">
+                        <span>R:<input type="number" id="bg-bottom-red" min="0" max="255" value="0"></span>
+                        <span>G:<input type="number" id="bg-bottom-green" min="0" max="255" value="0"></span>
+                        <span>B:<input type="number" id="bg-bottom-blue" min="0" max="255" value="0"></span>
+                        <span>A:<input type="number" id="bg-bottom-alpha" min="0" max="255" value="255"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <label for="weather-type">Weather Type:</label>
+            <select id="weather-type">
+                <option value="0">wtNONE</option>
+                <option value="1">wtRAIN</option>
+                <option value="2">wtSANDSTORM</option>
+                <option value="3">wtSNOW</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="steps-type">Steps Type:</label>
+            <select id="steps-type">
+                <option value="0">stHARD_GROUND</option>
+                <option value="1">stSOFT_GROUND</option>
+                <option value="2">stNONE</option>
+            </select>
+        </div>
+
+    </div>
+
     <div class="controls">
         <button id="controls-btn" title="Shows all options"><span class="bi-gear-fill"></span>Settings</button>
         <button id="clear-btn" title="Clear the grid"><span class="bi-trash"></span> Clear</button>
         <button id="undo-btn" title="Undo last action"><span class="bi-arrow-counterclockwise"></span> Undo</button>
-        <button id="spawnpoint-btn" title="Add spawn point"><span class="bi-person-fill"></span> Spawn</button>
-        <button id="blue-flag-btn" title="Add blue flag"><span class="bi-flag-fill" style="color: #0d6efd;"></span> Blue</button>
-        <button id="red-flag-btn" title="Add red flag"><span class="bi-flag-fill" style="color: #dc3545;"></span> Red</button>
+        <button id="spawnpoint-btn" title="Add spawn point"><span class="bi-person-fill"></span></button>
+        <button id="blue-flag-btn" title="Add blue flag"><span class="bi-flag-fill" style="color: #0d6efd;"></span></button>
+        <button id="red-flag-btn" title="Add red flag"><span class="bi-flag-fill" style="color: #dc3545;"></span></button>
         <button id="save-btn" title="Save current map"><span class="bi-save"></span> Save</button>
         <button id="help-btn" title="Show help information"><span class="bi-question-circle"></span> Help</button>
     </div>
 
     <script src="~/js/MapEditor/Edit/setupCanvas.js" defer></script>
     <script src="~/js/MapEditor/Edit/texture-manager.js" defer></script>
+    <script src="~/js/MapEditor/Edit/settings-manager.js" defer></script>
 
 </body>
 </html>

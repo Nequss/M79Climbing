@@ -68,12 +68,15 @@ let blueFlag = null;       // Single blue flag
 let currentMode = "triangle"; // Default mode
 const iconSize = 20;       // Size in pixels when drawn at zoom level 1
 let isShiftPressed = false;
+let isCtrlPressed = false; 
+const gridSize = 50;
 
 // View transformation
 let offset = { x: 0, y: 0 }; // Pan offset
 let zoomLevel = 1.0; // Zoom level
 const MAX_ZOOM = 10;
 const MIN_ZOOM = 0.1;
+
 
 // Initialize the UI
 function initializeUI() {
@@ -145,7 +148,6 @@ function worldToScreen(worldX, worldY) {
 
 // Draw grid for reference
 function drawGrid() {
-    const gridSize = 50;
     const gridColor = '#444444';
 
     ctx.strokeStyle = gridColor;
@@ -287,9 +289,16 @@ function drawCurrentPoints() {
 function drawAll() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw background
-    ctx.fillStyle = '#222222';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Check if we have a custom background drawer - removed alpha check
+    if (window.settingsManager &&
+        typeof window.settingsManager.drawBackground === 'function') {
+        // Always draw the background using the settings manager
+        window.settingsManager.drawBackground();
+    } else {
+        // Draw default background if no custom background
+        ctx.fillStyle = '#222222';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
     // Draw grid
     drawGrid();
@@ -308,7 +317,6 @@ function drawAll() {
     // Update poly panel if a triangle is selected
     updatePolyPanel();
 }
-
 
 // Check if a point is inside a triangle
 function isPointInTriangle(px, py, triangle) {
@@ -565,6 +573,100 @@ function closestPointOnLineSegment(a, b, p) {
     };
 }
 
+// Function to snap a point to the grid
+function snapPointToGrid(point) {
+    if (!point) return point;
+
+    point.x = Math.round(point.x / gridSize) * gridSize;  // Use lowercase gridSize
+    point.y = Math.round(point.y / gridSize) * gridSize;  // Use lowercase gridSize
+    return point;
+}
+
+
+// Function to snap selected vertex or triangle to grid
+function snapToGrid() {
+    // Only apply grid snapping when a vertex is selected
+    if (!selectedVertex) return;
+
+    if (selectedTriangleIndex === -1) {
+        // Current point being placed
+        snapPointToGrid(currentPoints[selectedVertexIndex]);
+    } else {
+        // Vertex of existing triangle
+        snapPointToGrid(triangles[selectedTriangleIndex].points[selectedVertexIndex]);
+    }
+
+    drawAll();
+}
+
+// Function to calculate the center of a triangle
+function getTriangleCenter(triangle) {
+    const x = (triangle.points[0].x + triangle.points[1].x + triangle.points[2].x) / 3;
+    const y = (triangle.points[0].y + triangle.points[1].y + triangle.points[2].y) / 3;
+    return { x, y };
+}
+
+// Function to rotate a point around a center point
+function rotatePointAroundCenter(point, center, angle) {
+    // Translate point to origin
+    const translatedX = point.x - center.x;
+    const translatedY = point.y - center.y;
+
+    // Rotate point
+    const rotatedX = translatedX * Math.cos(angle) - translatedY * Math.sin(angle);
+    const rotatedY = translatedX * Math.sin(angle) + translatedY * Math.cos(angle);
+
+    // Translate back
+    return {
+        x: rotatedX + center.x,
+        y: rotatedY + center.y
+    };
+}
+
+// Function to rotate a triangle
+// Make sure this method updates the rotation value in the texture object
+function rotateTriangle(triangleIndex, angle) {
+    const triangle = triangles[triangleIndex];
+    if (!triangle) return;
+
+    const center = getTriangleCenter(triangle);
+
+    // Rotate each vertex
+    for (let i = 0; i < 3; i++) {
+        const rotated = rotatePointAroundCenter(triangle.points[i], center, angle);
+        triangle.points[i].x = rotated.x;
+        triangle.points[i].y = rotated.y;
+    }
+
+    // If the triangle has texture, update its rotation value too
+    if (triangle.texture) {
+        // Update the stored rotation value (convert radians to degrees)
+        triangle.texture.rotation = (triangle.texture.rotation || 0) + (angle * 180 / Math.PI);
+
+        // Calculate center of texture coordinates
+        const textureCenterU = (triangle.points[0].TU + triangle.points[1].TU + triangle.points[2].TU) / 3;
+        const textureCenterV = (triangle.points[0].TV + triangle.points[1].TV + triangle.points[2].TV) / 3;
+        const textureCenter = { x: textureCenterU, y: textureCenterV };
+
+        // Rotate texture coordinates
+        for (let i = 0; i < 3; i++) {
+            if (triangle.points[i].TU !== undefined && triangle.points[i].TV !== undefined) {
+                const texturePoint = { x: triangle.points[i].TU, y: triangle.points[i].TV };
+                const rotatedTexture = rotatePointAroundCenter(texturePoint, textureCenter, angle);
+                triangle.points[i].TU = rotatedTexture.x;
+                triangle.points[i].TV = rotatedTexture.y;
+            }
+        }
+
+        // If textureManager is available, update its controls
+        if (window.textureManager && triangle === window.textureManager.selectedTriangle) {
+            window.textureManager.updateControlsFromTriangle(triangle);
+        }
+    }
+
+    drawAll();
+}
+
 
 // Event handlers
 canvas.addEventListener('click', (e) => {
@@ -674,16 +776,32 @@ canvas.addEventListener('mousemove', (e) => {
             // We're dragging a vertex
             const worldPos = screenToWorld(e.clientX, e.clientY);
 
-            if (selectedTriangleIndex === -1) {
-                currentPoints[selectedVertexIndex].x = worldPos.x;
-                currentPoints[selectedVertexIndex].y = worldPos.y;
-            } else {
-                triangles[selectedTriangleIndex].points[selectedVertexIndex].x = worldPos.x;
-                triangles[selectedTriangleIndex].points[selectedVertexIndex].y = worldPos.y;
+            // Apply snapping if Ctrl is pressed
+            if (isCtrlPressed) {
+                // Create a temporary point that we'll snap to grid
+                const snappedPos = { x: worldPos.x, y: worldPos.y };
+                snapPointToGrid(snappedPos);
 
-                // Apply snapping if Shift is pressed
-                if (isShiftPressed) {
-                    snapVertexToClosestEdge(selectedTriangleIndex, selectedVertexIndex);
+                if (selectedTriangleIndex === -1) {
+                    currentPoints[selectedVertexIndex].x = snappedPos.x;
+                    currentPoints[selectedVertexIndex].y = snappedPos.y;
+                } else {
+                    triangles[selectedTriangleIndex].points[selectedVertexIndex].x = snappedPos.x;
+                    triangles[selectedTriangleIndex].points[selectedVertexIndex].y = snappedPos.y;
+                }
+            } else {
+                // Normal behavior without snapping
+                if (selectedTriangleIndex === -1) {
+                    currentPoints[selectedVertexIndex].x = worldPos.x;
+                    currentPoints[selectedVertexIndex].y = worldPos.y;
+                } else {
+                    triangles[selectedTriangleIndex].points[selectedVertexIndex].x = worldPos.x;
+                    triangles[selectedTriangleIndex].points[selectedVertexIndex].y = worldPos.y;
+
+                    // Apply edge snapping if Shift is pressed
+                    if (isShiftPressed) {
+                        snapVertexToClosestEdge(selectedTriangleIndex, selectedVertexIndex);
+                    }
                 }
             }
 
@@ -693,12 +811,13 @@ canvas.addEventListener('mousemove', (e) => {
             const dx = (e.clientX - lastMousePos.x) / zoomLevel;
             const dy = (e.clientY - lastMousePos.y) / zoomLevel;
 
-            // Store original texture coordinates if the triangle has a texture
+            // Move all three vertices of the triangle
             const triangle = triangles[selectedTriangle];
+
+            // Store original texture coordinates if the triangle has a texture
             const originalTU = triangle.points.map(p => p.TU);
             const originalTV = triangle.points.map(p => p.TV);
 
-            // Move all three vertices of the triangle
             for (let i = 0; i < 3; i++) {
                 triangle.points[i].x += dx;
                 triangle.points[i].y += dy;
@@ -710,7 +829,7 @@ canvas.addEventListener('mousemove', (e) => {
                 }
             }
 
-            // Apply snapping if Shift is pressed
+            // Apply snapping - prioritize shift (edge) over ctrl (grid)
             if (isShiftPressed) {
                 snapToClosestEdge();
             }
@@ -723,19 +842,6 @@ canvas.addEventListener('mousemove', (e) => {
         }
 
         drawAll();
-    } else {
-        // Highlight vertex under cursor when not dragging
-        const vertexResult = findClosestVertex(e.clientX, e.clientY);
-        if (vertexResult.found) {
-            canvas.style.cursor = 'pointer';
-        } else {
-            const triangleResult = findTriangleUnderCursor(e.clientX, e.clientY);
-            if (triangleResult.found) {
-                canvas.style.cursor = 'move';
-            } else {
-                canvas.style.cursor = 'default';
-            }
-        }
     }
 
     lastMousePos = { x: e.clientX, y: e.clientY };
@@ -796,23 +902,26 @@ canvas.addEventListener('contextmenu', (e) => {
 canvas.addEventListener('wheel', (e) => {
     e.preventDefault();
 
-    // Calculate world position of mouse before zoom
-    const worldPosBeforeZoom = screenToWorld(e.clientX, e.clientY);
+    // If Alt key is pressed and a triangle is selected, ONLY rotate (no zooming)
+    if (e.altKey && selectedTriangle !== null) {
+        // Calculate rotation amount based on wheel delta
+        const rotationAmount = e.deltaY > 0 ? -0.05 : 0.05; // radians
+        rotateTriangle(selectedTriangle, rotationAmount);
+        return; // Important: exit early to prevent zooming when rotating
+    }
 
-    // Adjust zoom level
+    // Only perform zooming when Alt is NOT pressed
+    const worldPosBeforeZoom = screenToWorld(e.clientX, e.clientY);
     const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
     zoomLevel = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, zoomLevel * zoomFactor));
-
-    // Calculate world position of mouse after zoom
     const screenPosAfterZoom = worldToScreen(worldPosBeforeZoom.x, worldPosBeforeZoom.y);
-
-    // Adjust offset to keep mouse over same world position
     offset.x += e.clientX - screenPosAfterZoom.x;
     offset.y += e.clientY - screenPosAfterZoom.y;
-
     updateInfoPanel(e.clientX, e.clientY);
     drawAll();
 });
+
+
 
 // Clear button
 clearBtn.addEventListener('click', () => {
@@ -852,11 +961,22 @@ document.addEventListener('keydown', (e) => {
             snapToClosestEdge();
         }
     }
+
+    if (e.key === 'Control') {
+        isCtrlPressed = true;
+        if (selectedVertex) {  // Only snap if a vertex is selected
+            snapToGrid();
+        }
+    }
 });
 
 document.addEventListener('keyup', (e) => {
     if (e.key === 'Shift') {
         isShiftPressed = false;
+    }
+
+    if (e.key === 'Control') {
+        isCtrlPressed = false;
     }
 });
 
