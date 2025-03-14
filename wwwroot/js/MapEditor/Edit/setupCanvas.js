@@ -1003,7 +1003,6 @@ fullscreenBtn.addEventListener('click', () => {
     }
 });
 
-
 // Initialize the application
 function init() {
     initializeUI();
