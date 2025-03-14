@@ -8,6 +8,19 @@ const undoBtn = document.getElementById('undo-btn');
 const triangleTypeSelect = document.getElementById('triangle-type');
 const triangleColorInput = document.getElementById('triangle-color');
 const vertexCoordinates = document.getElementById('vertex-coordinates');
+const spawnPointBtn = document.getElementById('spawnpoint-btn');
+const redFlagBtn = document.getElementById('red-flag-btn');
+const blueFlagBtn = document.getElementById('blue-flag-btn');
+
+document.getElementById('red-flag-btn').addEventListener('click', () => {
+    currentMode = "redFlag";
+    canvas.style.cursor = "crosshair";
+});
+
+document.getElementById('blue-flag-btn').addEventListener('click', () => {
+    currentMode = "blueFlag";
+    canvas.style.cursor = "crosshair";
+});
 
 // Define polygon types based on the enum
 const POLY_TYPES = [
@@ -54,6 +67,7 @@ let redFlag = null;        // Single red flag
 let blueFlag = null;       // Single blue flag
 let currentMode = "triangle"; // Default mode
 const iconSize = 20;       // Size in pixels when drawn at zoom level 1
+let isShiftPressed = false;
 
 // View transformation
 let offset = { x: 0, y: 0 }; // Pan offset
@@ -454,6 +468,103 @@ function drawFlag(point, color) {
     ctx.stroke();
 }
 
+// Function to snap vertices to the closest edges of other triangles
+function snapToClosestEdge() {
+    if (selectedTriangle === null) return;
+
+    // If we're dragging a vertex, snap that vertex
+    if (selectedVertex && selectedTriangleIndex === selectedTriangle && selectedVertexIndex !== -1) {
+        snapVertexToClosestEdge(selectedTriangle, selectedVertexIndex);
+    }
+    // If we're moving the whole triangle, try to snap each vertex
+    else if (isMovingTriangle) {
+        // Try to snap each vertex of the selected triangle
+        for (let i = 0; i < 3; i++) {
+            snapVertexToClosestEdge(selectedTriangle, i);
+        }
+    }
+
+    drawAll(); // Redraw to show snapped positions
+}
+
+// Function to snap vertices to the closest edges of other triangles
+function snapToClosestEdge() {
+    if (selectedTriangle === null) return;
+
+    // If we're dragging a vertex, snap that vertex
+    if (selectedVertex && selectedTriangleIndex === selectedTriangle && selectedVertexIndex !== -1) {
+        snapVertexToClosestEdge(selectedTriangle, selectedVertexIndex);
+    }
+    // If we're moving the whole triangle, try to snap each vertex
+    else if (isMovingTriangle) {
+        // Try to snap each vertex of the selected triangle
+        for (let i = 0; i < 3; i++) {
+            snapVertexToClosestEdge(selectedTriangle, i);
+        }
+    }
+
+    drawAll(); // Redraw to show snapped positions
+}
+
+// Function to snap a specific vertex to the closest edge
+function snapVertexToClosestEdge(triangleIndex, vertexIndex) {
+    const vertex = triangles[triangleIndex].points[vertexIndex];
+    const snapThreshold = 15 / zoomLevel; // Adjust this value for snap sensitivity
+
+    let closestDist = snapThreshold;
+    let snapPoint = null;
+
+    // Check each triangle except the selected one
+    for (let i = 0; i < triangles.length; i++) {
+        if (i === triangleIndex) continue;
+
+        const triangle = triangles[i];
+
+        // Check each edge of the triangle
+        for (let j = 0; j < 3; j++) {
+            const pointA = triangle.points[j];
+            const pointB = triangle.points[(j + 1) % 3];
+
+            // Find the closest point on this edge to our vertex
+            const closest = closestPointOnLineSegment(pointA, pointB, vertex);
+            const dx = closest.x - vertex.x;
+            const dy = closest.y - vertex.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < closestDist) {
+                closestDist = dist;
+                snapPoint = closest;
+            }
+        }
+    }
+
+    // If we found a point to snap to, update the vertex position
+    if (snapPoint) {
+        vertex.x = snapPoint.x;
+        vertex.y = snapPoint.y;
+    }
+}
+
+// Helper function to find the closest point on a line segment to a given point
+function closestPointOnLineSegment(a, b, p) {
+    const ax_bx = b.x - a.x;
+    const ay_by = b.y - a.y;
+
+    // If segment is just a point, return that point
+    if (ax_bx === 0 && ay_by === 0) return { x: a.x, y: a.y };
+
+    // Calculate projection of point p onto line segment
+    const t = ((p.x - a.x) * ax_bx + (p.y - a.y) * ay_by) / (ax_bx * ax_bx + ay_by * ay_by);
+
+    // Constrain to segment
+    const t_clamped = Math.max(0, Math.min(1, t));
+
+    return {
+        x: a.x + t_clamped * ax_bx,
+        y: a.y + t_clamped * ay_by
+    };
+}
+
 
 // Event handlers
 canvas.addEventListener('click', (e) => {
@@ -569,6 +680,11 @@ canvas.addEventListener('mousemove', (e) => {
             } else {
                 triangles[selectedTriangleIndex].points[selectedVertexIndex].x = worldPos.x;
                 triangles[selectedTriangleIndex].points[selectedVertexIndex].y = worldPos.y;
+
+                // Apply snapping if Shift is pressed
+                if (isShiftPressed) {
+                    snapVertexToClosestEdge(selectedTriangleIndex, selectedVertexIndex);
+                }
             }
 
             vertexWasDragged = true;
@@ -581,6 +697,11 @@ canvas.addEventListener('mousemove', (e) => {
             for (let i = 0; i < 3; i++) {
                 triangles[selectedTriangle].points[i].x += dx;
                 triangles[selectedTriangle].points[i].y += dy;
+            }
+
+            // Apply snapping if Shift is pressed
+            if (isShiftPressed) {
+                snapToClosestEdge();
             }
 
             vertexWasDragged = true;
@@ -608,6 +729,7 @@ canvas.addEventListener('mousemove', (e) => {
 
     lastMousePos = { x: e.clientX, y: e.clientY };
 });
+
 
 canvas.addEventListener('mouseup', () => {
     isDragging = false;
@@ -711,25 +833,43 @@ undoBtn.addEventListener('click', () => {
     drawAll();
 });
 
-document.getElementById('spawnpoint-btn').addEventListener('click', () => {
+// Shift event listeners
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Shift') {
+        isShiftPressed = true;
+        if (selectedTriangle !== null) {
+            snapToClosestEdge();
+        }
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    if (e.key === 'Shift') {
+        isShiftPressed = false;
+    }
+});
+
+spawnPointBtn.addEventListener('click', () => {
     currentMode = "spawn";
-    canvas.style.cursor = "crosshair";
 });
 
-document.getElementById('red-flag-btn').addEventListener('click', () => {
+redFlagBtn.addEventListener('click', () => {
     currentMode = "redFlag";
-    canvas.style.cursor = "crosshair";
 });
 
-document.getElementById('blue-flag-btn').addEventListener('click', () => {
+blueFlagBtn.addEventListener('click', () => {
     currentMode = "blueFlag";
-    canvas.style.cursor = "crosshair";
 });
 
 // Initialize the application
 function init() {
     initializeUI();
     resizeCanvas();
+
+    // Center
+    offset.x = canvas.width / 2;
+    offset.y = canvas.height / 2;
+
     window.addEventListener('resize', resizeCanvas);
     drawAll();
 }
