@@ -286,14 +286,14 @@ hr.divider {
     #outter-table-leaderboard th, #outter-table-leaderboard td {
         padding: 0;
         margin: 0;
-        border-bottom: 1px solid yellow;
+        border-bottom: 1px solid #BBCC66;
         white-space: nowrap; /* Prevents text from wrapping */
         overflow: hidden;
         text-overflow: ellipsis;
     }
 
     #outter-table-leaderboard tr:hover td {
-        color: #BBCC66;
+        color: #FFFF00;
     }
 
     #outter-table-leaderboard th {
@@ -304,6 +304,8 @@ hr.divider {
         float: left;
         text-align: left;
         width: 432px;
+        max-width: 432px;
+        padding: 0 10px;
     }
 
 #inner-table-leaderboard {
@@ -323,8 +325,9 @@ hr.divider {
 
     #inner-table-leaderboard td {
         flex-grow: 1;
-        width: 400px;
-        padding: 0;
+        max-width: 432px;
+        padding: 0 10px;
+        border-bottom: 1px solid transparent;
     }
 
         #inner-table-leaderboard td:last-child {
@@ -338,7 +341,7 @@ hr.divider {
 
 #legend-table-leaderboard th {
     width: 400px;
-    border-bottom: 1px solid yellow;
+    border-bottom: 1px solid #BBCC66;
 }
 
 
@@ -391,10 +394,28 @@ hr.divider {
     margin: 0 50px;
 }
 
+@media (max-width:1400px){
+
+    #player-stats-statistics {
+        flex-direction: row;
+        align-content: center;
+    }
+
+    #outter-table-leaderboard td,
+    #inner-table-leaderboard td {
+        width: 350px;
+        padding: 0 8px; /* Add consistent padding for both */
+        box-sizing: border-box; /* Ensures padding is included in width calculation */
+    }
+}
 @media (max-width:991px)
 {
     #player-stats-statistics{
         margin: 0 10px;
+    }
+    .row{
+        flex-wrap: nowrap;
+        flex-direction: row;
     }
 }
 
@@ -433,9 +454,14 @@ details summary {
     width:auto;
 }
 
+hr.divider {
+    border-top: 1px solid #BBCC66;
+    opacity: 1;
+}
 
-.player-stats-card{
+.player-stats-card {
     display: flex;
+    flex-direction: column;
 }
 
     .player-stats-card p {
