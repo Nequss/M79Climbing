@@ -10,14 +10,16 @@
     ViewData["Title"] = name;
 }
 
-<h1>@name</h1>
+<div id = "player-stat-title">
+    <h1>@name</h>
+</div>
 
 <hr class="divider"/>
 
 @if (playerStats != null)
 {
     <div class="player-stats-container">
-        <div class="row">
+        <div class="row" id="player-stats-statistics">
             <div class="col-md-4">
                 <div class="player-stats-card">
                     <p>  &#x1F947; Golds: @ViewData["Top1Count"]</p>
