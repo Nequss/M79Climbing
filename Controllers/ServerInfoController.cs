@@ -11,6 +11,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
+/*
+ * To do:
+ * - if ever soldat api is down, display a message to the user
+ * - no ip hardcoded
+*/
+
 namespace M79Climbing.Controllers
 {
     public class ServerInfoController : Controller
@@ -78,8 +84,13 @@ namespace M79Climbing.Controllers
                         // Player exists, sum the new data with existing data
                         playerStats.GrenadesThrown += int.Parse(parts[3]);
                         playerStats.M79ShotsFired += int.Parse(parts[4]);
-                        
+
+                        Console.WriteLine($"Time to add: {parts[5]}");
+                        Console.WriteLine($"Players time: {playerStats.TimeSpentOnServer.TotalSeconds}");
+
                         playerStats.TimeSpentOnServer += TimeSpan.FromSeconds(int.Parse(parts[5]));
+
+                        Console.WriteLine($"Time after adding: {playerStats.TimeSpentOnServer.TotalSeconds}");
 
                         playerStats.MapFinishes += int.Parse(parts[6]);
                         playerStats.Respawns += int.Parse(parts[7]);
@@ -142,7 +153,7 @@ namespace M79Climbing.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var apiUrl = "https://api.soldat.pl/v0/server/34.118.30.26/23073";
+            var apiUrl = "https://api.soldat.pl/v0/server/34.118.4.116/23073";
             ServerInfoModel serverData = null;
 
             try

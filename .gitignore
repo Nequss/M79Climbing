@@ -369,5 +369,11 @@ Properties/launchSettings.json
 *.db-shm
 *.db-wal
 
+# SQLite database file
+*.db
+
+# Exclude the textures directory
+wwwroot/images/textures/
+
 # Ignore all files in the data directory
 db-data/*

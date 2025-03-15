@@ -41,6 +41,9 @@ builder.Services.AddScoped<HighscoreService>();
 // Add Scoped PlayerStatsService
 builder.Services.AddScoped<PlayerStatsService>();
 
+// Add Scoped PMS_File_Service for Soldat Map Reading/Writing
+builder.Services.AddScoped<PMS_File_Service>();
+
 var app = builder.Build();
 
 // Apply migrations at startup
