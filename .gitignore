@@ -377,3 +377,4 @@ wwwroot/images/textures/
 
 # Ignore all files in the data directory
 db-data/*
+/app.db
