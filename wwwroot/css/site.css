@@ -423,7 +423,6 @@ details summary {
     width: auto;
 }
 
-
 @media (max-width:1400px) {
     .row{
         flex-direction: column;
@@ -433,8 +432,6 @@ details summary {
         width: 100%;
     }
 }
-
-
 
 @media (max-width:575px) {
     .col-md-6 {
