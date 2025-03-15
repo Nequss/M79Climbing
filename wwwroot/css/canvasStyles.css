@@ -44,8 +44,8 @@ canvas {
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
     max-height: 60vh;
     overflow-y: auto;
-    max-width: calc(25% - 20px);
-    min-width: 400px;
+    max-width: calc(20% - 20px);
+    min-width: 250px;
 }
 
     #poly-panel h3 {
@@ -293,7 +293,7 @@ canvas {
 /* Settings Panel Styles */
 #settings-panel {
     position: fixed;
-    top: 100px;
+    top: 60px;
     right: 20px;
     background-color: #252E1C;
     color: white;
@@ -304,7 +304,7 @@ canvas {
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
     max-height: 80vh;
     overflow-y: auto;
-    width: 400px;
+    width: 300px;
 }
 
     #settings-panel h3 {
@@ -345,7 +345,7 @@ canvas {
     }
 
 input[type="color"] {
-    width: 80px;
+    width: 50px;
     height: 30px;
     padding: 0;
     border: 1px solid #555;
@@ -359,7 +359,7 @@ input[type="color"] {
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    margin-left: 30px;
+    margin-left: 10px;
     width: 60%;
 }
 
@@ -379,7 +379,7 @@ input[type="color"] {
         text-align: center;
         transition: all 0.2s ease;
         height: 24px;
-        width: 50px;
+        width: 45px;
     }
         .rgba-inputs input[type="number"]:focus {
             background-color: #252E1C;

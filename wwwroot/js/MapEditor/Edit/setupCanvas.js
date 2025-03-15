@@ -632,9 +632,10 @@ function rotateTriangle(triangleIndex, angle) {
     const triangle = triangles[triangleIndex];
     if (!triangle) return;
 
+    // Always use the centroid (middle) of the triangle as the static pivot point
     const center = getTriangleCenter(triangle);
 
-    // Rotate each vertex
+    // Rotate each vertex around the center
     for (let i = 0; i < 3; i++) {
         const rotated = rotatePointAroundCenter(triangle.points[i], center, angle);
         triangle.points[i].x = rotated.x;
