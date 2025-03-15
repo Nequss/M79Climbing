@@ -473,7 +473,6 @@ hr.divider {
     width: auto;
 }
 
-
 @media (max-width:1400px) {
     .row{
         flex-direction: column;
@@ -483,8 +482,6 @@ hr.divider {
         width: 100%;
     }
 }
-
-
 
 @media (max-width:575px) {
     .col-md-6 {

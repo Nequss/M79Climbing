@@ -1,4 +1,6 @@
-﻿// Canvas setup
+﻿// setupCanvas.js - Functions for setting up the canvas and handling user input
+
+// Canvas setup
 const canvas = document.getElementById('canvas-editor');
 const ctx = canvas.getContext('2d');
 const infoPanel = document.getElementById('info-panel');

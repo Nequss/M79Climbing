@@ -156,8 +156,7 @@ namespace M79Climbing.Controllers
         private bool IsImageFile(string filePath)
         {
             string extension = Path.GetExtension(filePath).ToLowerInvariant();
-            return extension == ".jpg" || extension == ".jpeg" || extension == ".png" ||
-                   extension == ".gif" || extension == ".bmp" || extension == ".webp";
+            return extension == ".jpg" || extension == ".jpeg" || extension == ".png" || extension == ".bmp";
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
