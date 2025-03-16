@@ -34,24 +34,23 @@ namespace M79Climbing.Controllers
             return View();
         }
 
-        // Gets top X times for a given map searched by Name or IP if Name not found
+        // Gets top X times for a given player on a specific map, sorted from fastest to slowest
         [HttpGet("times/{playerName}/{mapName}/{x}")]
-        public async Task<IActionResult> GetAlltimes(string mapName, int x)
+        public async Task<IActionResult> GetAlltimes(string playerName, string mapName, int x)
         {
-            var bestRecordsPerUser = await _context.Cap
-                .Where(c => c.Map == mapName)
-                .GroupBy(c => c.Name)
-                .Select(g => g.OrderBy(c => c.Time).First()) // Get best time per user
-                .OrderBy(c => c.Time) // Order by fastest time
-                .Take(x) // Limit results
+            // Find records by player name
+            var playerRecords = await _context.Cap
+                .Where(c => c.Map == mapName && c.Name == playerName)
+                .OrderBy(c => c.Time) // Sort by fastest time
+                .Take(x) // Limit to X records
                 .ToListAsync();
 
-            if (bestRecordsPerUser.Count == 0)
+            if (playerRecords.Count == 0)
                 return Content("No records found");
 
             var result = new StringBuilder();
 
-            foreach (var record in bestRecordsPerUser)
+            foreach (var record in playerRecords)
             {
                 result.AppendLine($"{record.Name} {TimeHelper.ReturnTime(record.Time)} {record.CapDate:yyyy-MM-dd HH:mm:ss}");
             }
@@ -59,27 +58,37 @@ namespace M79Climbing.Controllers
             return Content(result.ToString());
         }
 
-        // Gest best times for a map, limited by X
+
+
+        // Gets best times for a map, one per player, limited by X
         [HttpGet("besttimes/{mapName}/{x}")]
         public async Task<IActionResult> GetBestTimes(string mapName, int x)
         {
-            var records = await _context.Cap
+            // First get all records for this map
+            var allRecords = await _context.Cap
                 .Where(c => c.Map == mapName)
-                .OrderBy(c => c.Time) // Best times are lowest times
-                .Take(x)
                 .ToListAsync();
 
-            if (records.Count == 0)
+            // Then use LINQ-to-Objects to get the best time per player
+            var bestRecordsPerPlayer = allRecords
+                .GroupBy(c => c.Name)
+                .Select(g => g.OrderBy(c => c.Time).First())
+                .OrderBy(c => c.Time)
+                .Take(x)
+                .ToList();
+
+            if (bestRecordsPerPlayer.Count == 0)
                 return Content("No records found");
 
             var result = new StringBuilder();
-            foreach (var record in records)
+            foreach (var record in bestRecordsPerPlayer)
             {
                 result.AppendLine($"{record.Name} {TimeHelper.ReturnTime(record.Time)} {record.CapDate:yyyy-MM-dd HH:mm:ss}");
             }
 
             return Content(result.ToString());
         }
+
 
         [HttpGet("playerstats/{playerName}")]
         public async Task<IActionResult> GetPlayerStats(string playerName)
