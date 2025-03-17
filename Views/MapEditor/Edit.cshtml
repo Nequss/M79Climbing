@@ -119,19 +119,111 @@
                 <option value="2">stNONE</option>
             </select>
         </div>
+    </div>
 
+    <!-- Help Panel - Added directly to HTML like other panels -->
+    <div id="help-panel" style="display: none;">
+        <h3>Help & Shortcuts</h3>
+
+        <div class="help-section">
+            <h4>Basic Controls</h4>
+            <ul>
+                <li><strong>Left Click</strong>: Place a triangle vertex or select objects</li>
+                <li><strong>Right Click</strong>: Delete objects or cancel selection</li>
+                <li><strong>Mouse Wheel</strong>: Zoom in/out</li>
+                <li><strong>Middle Mouse/Right Click + Drag</strong>: Pan the view</li>
+                <li><strong>Ctrl + Mouse Wheel</strong>: Scale selected triangle(s)</li>
+                <li><strong>Alt + Mouse Wheel</strong>: Rotate selected triangle(s)</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h4>Keyboard Shortcuts</h4>
+            <ul>
+                <li><strong>Ctrl+Z</strong>: Undo last action</li>
+                <li><strong>Ctrl+Y / Ctrl+Shift+Z</strong>: Redo last action</li>
+                <li><strong>Ctrl+A</strong>: Select all triangles</li>
+                <li><strong>Delete</strong>: Delete selected triangle(s)</li>
+                <li><strong>Ctrl+C</strong>: Copy selected triangle(s)</li>
+                <li><strong>Ctrl+V</strong>: Paste copied triangle(s)</li>
+                <li><strong>Ctrl+D</strong>: Duplicate selected triangle(s)</li>
+                <li><strong>Shift (hold)</strong>: Enable edge snapping while moving</li>
+                <li><strong>Ctrl (hold)</strong>: Enable grid snapping while moving</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h4>Triangle Creation & Editing</h4>
+            <p>Click three times on the canvas to create a triangle. Each triangle requires exactly three vertices.</p>
+            <p>Select a triangle by clicking on it. Once selected, you can:</p>
+            <ul>
+                <li>Drag it to move it</li>
+                <li>Drag its vertices to reshape it</li>
+                <li>Change its properties in the Properties panel</li>
+                <li>Apply a texture from the texture panel</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h4>Multi-Selection</h4>
+            <p>Hold <strong>Shift</strong> while clicking to select multiple triangles. With multiple triangles selected, you can:</p>
+            <ul>
+                <li>Move all selected triangles together</li>
+                <li>Rotate them using Alt+Mouse Wheel</li>
+                <li>Scale them using Ctrl+Mouse Wheel</li>
+                <li>Delete them all at once</li>
+                <li>Copy and paste them as a group</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h4>Special Objects</h4>
+            <p>Click the buttons in the toolbar to place special objects:</p>
+            <ul>
+                <li><strong>Spawn Point</strong>: Where players spawn</li>
+                <li><strong>Red Flag</strong>: Capture point for the red team</li>
+                <li><strong>Blue Flag</strong>: Capture point for the blue team</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h4>Map Settings</h4>
+            <p>Access map settings by clicking the map icon in the toolbar. Here you can change:</p>
+            <ul>
+                <li>Map name</li>
+                <li>Background colors (gradient)</li>
+                <li>Weather effects</li>
+                <li>Footstep sounds</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h4>Textures</h4>
+            <p>Select a triangle, then click on a texture in the texture panel to apply it.</p>
+            <p>Use the texture controls to adjust position, rotation, and scale.</p>
+        </div>
+
+        <div class="help-footer">
+            <p>Created by <a href="https://github.com/Nequss" target="_blank">Nequss</a></p>
+            <p>View project on <a href="https://github.com/Nequss/M79Climbing" target="_blank">GitHub</a></p>
+            <p>Version: Demo - Last updated: March 17, 2025</p>
+        </div>
     </div>
 
     <div class="controls">
-        <button id="controls-btn" title="Shows all options"><span class="bi-gear-fill"></span>Settings</button>
-        <button id="clear-btn" title="Clear the grid"><span class="bi-trash"></span> Clear</button>
-        <button id="undo-btn" title="Undo last action"><span class="bi-arrow-counterclockwise"></span> Undo</button>
+        <button id="editor-btn" title="Show editor settings"><span class="bi-gear-fill"></span></button>
+        <button id="controls-btn" title="Show map settings"><span class="bi-map"></span></button>
+        <button id="save-btn" title="Save current map"><span class="bi-save"></span></button>
+        <button id="undo-btn" title="Undo last action"><span class="bi-arrow-counterclockwise"></span></button>
+        <button id="redo-btn" title="Redo last action"><span class="bi-arrow-clockwise"></span></button>
+        <button id="clear-btn" title="Clear the grid"><span class="bi-trash"></span></button>
         <button id="spawnpoint-btn" title="Add spawn point"><span class="bi-person-fill"></span></button>
         <button id="blue-flag-btn" title="Add blue flag"><span class="bi-flag-fill" style="color: #0d6efd;"></span></button>
         <button id="red-flag-btn" title="Add red flag"><span class="bi-flag-fill" style="color: #dc3545;"></span></button>
-        <button id="save-btn" title="Save current map"><span class="bi-save"></span> Save</button>
-        <button id="fullscreen-btn" title="Toggle fullscreen mode"><span class="bi-fullscreen"></span> Fullscreen</button>
-        <button id="help-btn" title="Show help information"><span class="bi-question-circle"></span> Help</button>
+        <button id="scenery-btn" title="Add scenery"><span class="bi-tree-fill"></span></button>
+        <button id="primitives-btn" title="Add primitives"><span class="bi-bounding-box"></span></button>
+        <button id="fullscreen-btn" title="Toggle fullscreen mode"><span class="bi-fullscreen"></span></button>
+        <button id="help-btn" title="Show help information"><span class="bi-question-circle"></span></button>
     </div>
 
     <script src="~/js/MapEditor/Edit/setupCanvas.js" defer></script>
@@ -139,6 +231,6 @@
     <script src="~/js/MapEditor/Edit/settings-manager.js" defer></script>
     <script src="~/js/MapEditor/Edit/multi-select-manager.js" defer></script>
     <script src="~/js/MapEditor/Edit/clipboard-manager.js" defer></script>
-
+    <script src="~/js/MapEditor/Edit/help-manager.js" defer></script>
 </body>
 </html>
