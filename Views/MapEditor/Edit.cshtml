@@ -100,7 +100,6 @@
                 </div>
             </div>
         </div>
-
         <div>
             <label for="weather-type">Weather Type:</label>
             <select id="weather-type">
@@ -121,7 +120,7 @@
         </div>
     </div>
 
-    <!-- Help Panel - Added directly to HTML like other panels -->
+    <!-- Help Panel -->
     <div id="help-panel" style="display: none;">
         <h3>Help & Shortcuts</h3>
 
@@ -206,7 +205,246 @@
         <div class="help-footer">
             <p>Created by <a href="https://github.com/Nequss" target="_blank">Nequss</a></p>
             <p>View project on <a href="https://github.com/Nequss/M79Climbing" target="_blank">GitHub</a></p>
-            <p>Version: Demo - Last updated: March 17, 2025</p>
+            <p>Version: Demo - Last updated: March 18, 2025</p>
+        </div>
+    </div>
+
+    <!-- Primitives Panel - Properly structured and no close button -->
+    <div id="primitives-panel" class="editor-panel" style="display: none;">
+        <div class="panel-header">
+            <h3>Primitives</h3>
+            <!-- Close button removed as requested -->
+        </div>
+
+        <div class="primitive-shapes">
+            <div class="primitive-item" data-shape="rectangle">
+                <i class="bi bi-square-fill"></i>
+                <span>Rectangle</span>
+            </div>
+            <div class="primitive-item" data-shape="circle">
+                <i class="bi bi-circle-fill"></i>
+                <span>Circle</span>
+            </div>
+            <div class="primitive-item" data-shape="star">
+                <i class="bi bi-star-fill"></i>
+                <span>Star</span>
+            </div>
+            <div class="primitive-item" data-shape="cross">
+                <i class="bi bi-plus-lg"></i>
+                <span>Cross</span>
+            </div>
+            <div class="primitive-item" data-shape="arrow">
+                <i class="bi bi-arrow-right"></i>
+                <span>Arrow</span>
+            </div>
+            <div class="primitive-item" data-shape="trapezoid">
+                <svg width="24" height="40" viewBox="0 0 24 24">
+                    <polygon points="4,18 20,18 16,6 8,6" fill="white" />
+                </svg>
+                <span>Trapezoid</span>
+            </div>
+            <div class="primitive-item" data-shape="sinusoid">
+                <i class="bi bi-activity"></i>
+                <span>Sinusoid</span>
+            </div>
+            <div class="primitive-item" data-shape="squares">
+                <i class="bi bi-grid-3x3"></i>
+                <span>Squares</span>
+            </div>
+            <div class="primitive-item" data-shape="tunnel">
+                <i class="bi bi-chevron-double-up"></i>
+                <span>Tunnel</span>
+            </div>
+        </div>
+
+        <div class="primitive-controls">
+            <h4>Shape Properties</h4>
+
+            <div class="control-group">
+                <label for="primitive-color">Color:</label>
+                <input type="color" id="primitive-color" value="#64c8ff">
+            </div>
+
+            <div class="control-group">
+                <label for="primitive-type">Type:</label>
+                <select id="primitive-type"></select>
+            </div>
+
+            <!-- Rectangle-specific controls -->
+            <div id="primitive-rectangle-size-x" class="control-group primitive-option" style="display: none;">
+                <label for="rectangle-size-x">Width:</label>
+                <input type="range" id="rectangle-size-x" min="0.1" max="3" step="0.1" value="1">
+                <span id="rectangle-size-x-value">1.0</span>
+            </div>
+
+            <div id="primitive-rectangle-size-y" class="control-group primitive-option" style="display: none;">
+                <label for="rectangle-size-y">Height:</label>
+                <input type="range" id="rectangle-size-y" min="0.1" max="3" step="0.1" value="1">
+                <span id="rectangle-size-y-value">1.0</span>
+            </div>
+
+            <!-- Circle-specific controls -->
+            <div id="primitive-circle-segments" class="control-group primitive-option" style="display: none;">
+                <label for="circle-segments">Segments:</label>
+                <input type="range" id="circle-segments" min="3" max="36" value="12">
+                <span id="circle-segments-value">12</span>
+            </div>
+
+            <!-- Circle angle controls -->
+            <div id="primitive-circle-angles" class="control-group primitive-option" style="display: none;">
+                <label for="circle-start-angle">Start Angle:</label>
+                <input type="range" id="circle-start-angle" min="0" max="360" value="0">
+                <span id="circle-start-angle-value">0</span>
+
+                <label for="circle-end-angle">End Angle:</label>
+                <input type="range" id="circle-end-angle" min="0" max="360" value="360">
+                <span id="circle-end-angle-value">360</span>
+            </div>
+
+            <!-- Star-specific controls -->
+            <div id="primitive-star-points" class="control-group primitive-option" style="display: none;">
+                <label for="star-points">Points:</label>
+                <input type="range" id="star-points" min="3" max="12" value="5">
+                <span id="star-points-value">5</span>
+            </div>
+
+            <!-- Cross-specific controls -->
+            <div id="primitive-cross-width" class="control-group primitive-option" style="display: none;">
+                <label for="cross-width">Arm Width:</label>
+                <input type="range" id="cross-width" min="0.1" max="0.5" step="0.01" value="0.3">
+                <span id="cross-width-value">0.30</span>
+            </div>
+
+            <!-- Trapezoid-specific controls -->
+            <div id="primitive-trapezoid-top-width" class="control-group primitive-option" style="display: none;">
+                <label for="trapezoid-top-width">Top Width:</label>
+                <input type="range" id="trapezoid-top-width" min="0.1" max="1.0" step="0.01" value="0.6">
+                <span id="trapezoid-top-width-value">0.60</span>
+            </div>
+
+            <div id="primitive-trapezoid-height" class="control-group primitive-option" style="display: none;">
+                <label for="trapezoid-height">Height:</label>
+                <input type="range" id="trapezoid-height" min="0.1" max="2.0" step="0.01" value="0.5">
+                <span id="trapezoid-height-value">0.50</span>
+            </div>
+
+            <div id="primitive-trapezoid-skew" class="control-group primitive-option" style="display: none;">
+                <label for="trapezoid-skew">Skew:</label>
+                <input type="range" id="trapezoid-skew" min="-0.5" max="0.5" step="0.01" value="0">
+                <span id="trapezoid-skew-value">0.00</span>
+            </div>
+
+            <!-- Sinusoid-specific controls -->
+            <div id="primitive-sinusoid-amplitude" class="control-group primitive-option" style="display: none;">
+                <label for="sinusoid-amplitude">Amplitude:</label>
+                <input type="range" id="sinusoid-amplitude" min="10" max="200" value="50">
+                <span id="sinusoid-amplitude-value">50</span>
+            </div>
+
+            <div id="primitive-sinusoid-wavelength" class="control-group primitive-option" style="display: none;">
+                <label for="sinusoid-wavelength">Wavelength:</label>
+                <input type="range" id="sinusoid-wavelength" min="20" max="200" value="100">
+                <span id="sinusoid-wavelength-value">100</span>
+            </div>
+
+            <div id="primitive-sinusoid-segments" class="control-group primitive-option" style="display: none;">
+                <label for="sinusoid-segments">Cycles:</label>
+                <input type="range" id="sinusoid-segments" min="1" max="10" value="3">
+                <span id="sinusoid-segments-value">3</span>
+            </div>
+
+            <!-- Connected Squares controls -->
+            <div id="primitive-squares-count" class="control-group primitive-option" style="display: none;">
+                <label for="squares-count">Count:</label>
+                <input type="range" id="squares-count" min="2" max="10" value="4">
+                <span id="squares-count-value">4</span>
+            </div>
+
+            <div id="primitive-squares-spacing" class="control-group primitive-option" style="display: none;">
+                <label for="squares-spacing">Spacing:</label>
+                <input type="range" id="squares-spacing" min="0" max="100" value="5">
+                <span id="squares-spacing-value">10</span>
+            </div>
+
+            <div id="primitive-squares-size-x" class="control-group primitive-option" style="display: none;">
+                <label for="squares-size-x">Width:</label>
+                <input type="range" id="squares-size-x" min="0.1" max="5" step="0.1" value="0.5">
+                <span id="squares-size-x-value">1.0</span>
+            </div>
+
+            <div id="primitive-squares-size-y" class="control-group primitive-option" style="display: none;">
+                <label for="squares-size-y">Height:</label>
+                <input type="range" id="squares-size-y" min="0.1" max="5" step="0.1" value="0.5">
+                <span id="squares-size-y-value">1.0</span>
+            </div>
+
+            <div id="primitive-squares-show-connectors" class="control-group primitive-option checkbox-control" style="display: none;">
+                <label for="squares-show-connectors">Show Connectors:</label>
+                <input type="checkbox" id="squares-show-connectors">
+            </div>
+
+            <!-- Tunnel controls -->
+            <div id="primitive-tunnel-length" class="control-group primitive-option" style="display: none;">
+                <label for="tunnel-length">Length:</label>
+                <input type="range" id="tunnel-length" min="50" max="500" value="100">
+                <span id="tunnel-length-value">150</span>
+            </div>
+
+            <div id="primitive-tunnel-height" class="control-group primitive-option" style="display: none;">
+                <label for="tunnel-height">Height:</label>
+                <input type="range" id="tunnel-height" min="20" max="200" value="60">
+                <span id="tunnel-height-value">60</span>
+            </div>
+
+            <div id="primitive-tunnel-segments" class="control-group primitive-option" style="display: none;">
+                <label for="tunnel-segments">Segments:</label>
+                <input type="range" id="tunnel-segments" min="1" max="10" value="1">
+                <span id="tunnel-segments-value">3</span>
+            </div>
+
+            <div id="primitive-tunnel-spacing" class="control-group primitive-option" style="display: none;">
+                <label for="tunnel-spacing">Wall Spacing:</label>
+                <input type="range" id="tunnel-spacing" min="10" max="500" value="40">
+                <span id="tunnel-spacing-value">40</span>
+            </div>
+
+            <div id="primitive-tunnel-bend-type" class="control-group primitive-option" style="display: none;">
+                <label for="tunnel-bend-type">Bend Type:</label>
+                <select id="tunnel-bend-type">
+                    <option value="none">None</option>
+                    <option value="soft">Soft Bend</option>
+                </select>
+            </div>
+
+            <div id="primitive-tunnel-bend-point" class="control-group primitive-option" style="display: none;">
+                <label for="tunnel-bend-point">Bend Position:</label>
+                <input type="range" id="tunnel-bend-point" min="0" max="1" step="0.1" value="0.5">
+                <span id="tunnel-bend-point-value">0.5</span>
+            </div>
+
+            <div id="primitive-tunnel-bend-amount" class="control-group primitive-option" style="display: none;">
+                <label for="tunnel-bend-amount">Bend Amount:</label>
+                <input type="range" id="tunnel-bend-amount" min="0" max="1" step="0.1" value="0.3">
+                <span id="tunnel-bend-amount-value">0.3</span>
+            </div>
+
+            <div id="primitive-tunnel-square-size" class="control-group primitive-option" style="display: none;">
+                <label for="tunnel-square-size">Square Size:</label>
+                <input type="range" id="tunnel-square-size" min="5" max="50" value="20">
+                <span id="tunnel-square-size-value">20</span>
+            </div>
+
+            <div id="primitive-tunnel-has-gaps" class="control-group primitive-option checkbox-control" style="display: none;">
+                <label for="tunnel-has-gaps">Show Gaps:</label>
+                <input type="checkbox" id="tunnel-has-gaps">
+            </div>
+
+            <div id="primitive-tunnel-gap-size" class="control-group primitive-option" style="display: none;">
+                <label for="tunnel-gap-size">Gap Size:</label>
+                <input type="range" id="tunnel-gap-size" min="1" max="10" value="2">
+                <span id="tunnel-gap-size-value">2</span>
+            </div>
+
         </div>
     </div>
 
@@ -232,5 +470,6 @@
     <script src="~/js/MapEditor/Edit/multi-select-manager.js" defer></script>
     <script src="~/js/MapEditor/Edit/clipboard-manager.js" defer></script>
     <script src="~/js/MapEditor/Edit/help-manager.js" defer></script>
+    <script src="~/js/MapEditor/Edit/primitives-manager.js" defer></script>
 </body>
 </html>
