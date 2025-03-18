@@ -3,6 +3,7 @@ html {
     margin: 0;
     padding: 0;
     height: 100%;
+    overflow-x: hidden;
 }
 
 @media (min-width: 768px) {
@@ -372,15 +373,59 @@ hr.divider {
 
 @media (max-width:768px) {
     #outter-table-leaderboard tbody tr td {
-        width: 150px;
+        width: 173px;
     }
 }
 
-@media (max-width:488px) {
-    #outter-table-leaderboard tbody tr td {
-        width: 120px;
+@media (max-width: 575px) {
+    /* Make tables responsive on small screens */
+    #legend-table-leaderboard,
+    #outter-table-leaderboard,
+    #inner-table-leaderboard {
+        width: 100%;
+        table-layout: fixed;
     }
+
+        /* Reset outer table cell properties */
+        #outter-table-leaderboard tbody tr td {
+            float: none;
+            width: 33.33%;
+            max-width: none;
+            padding: 5px;
+            font-size: 0.85rem;
+        }
+
+        /* Reset inner table cell properties */
+        #inner-table-leaderboard tr {
+            display: table-row;
+        }
+
+        #inner-table-leaderboard td {
+            flex: 1;
+            width: 33.33%;
+            max-width: none;
+            padding: 5px;
+            font-size: 0.85rem;
+        }
+
+        /* Reset legend table header properties */
+        #legend-table-leaderboard th {
+            width: 33.33%;
+            padding: 5px;
+            font-size: 0.85rem;
+        }
+
+        /* Ensure text doesn't overflow */
+        #legend-table-leaderboard th,
+        #outter-table-leaderboard td,
+        #inner-table-leaderboard td {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 }
+
+
 
 /*END LEADERBOARD ALIGNMENT IMPROVE IT*/
 
@@ -497,6 +542,10 @@ hr.divider {
 }
 /*END player stats on top page*/
 
+/* START scroll bar change*/
+
+/* END scrollbar change*/
+
 /* MapEditor Index Page */
 .button-container {
     display: flex;
@@ -542,7 +591,24 @@ hr.divider {
 /*  END of Map Editor */
 
 
+/* scrollbar styles to help panel */
+#help-panel::-webkit-scrollbar {
+    width: 5px;
+}
 
+#help-panel::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 5px;
+}
+
+#help-panel::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+}
+
+    #help-panel::-webkit-scrollbar-thumb:hover {
+        background: #BBCC66;
+    }
 
 /*********** Change autocomplete styles in WebKit ************
 
